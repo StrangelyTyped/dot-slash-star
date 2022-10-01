@@ -1,4 +1,5 @@
 const levels = [
+    null, // don't start at level 0
     {
         title: "Planetary Occlusion 1",
         summary: "Some summary text here",
@@ -12,6 +13,36 @@ const levels = [
                     settings: {
                         orbit: 1234,
                         size: 5678,
+                    }
+                }
+            ],
+            initialState: [
+                {
+                    feature: "star",
+                    settings: {
+                    }
+                },
+                {
+                    feature: "planet",
+                    settings: {
+                        orbit: 1.1,
+                        size: 4,
+                        phase: 0,
+                    }
+                },
+                {
+                    feature: "planet",
+                    settings: {
+                        orbit: 1.5,
+                        size: 2,
+                        phase: 0,
+                    }
+                },
+                {
+                    feature: "pulsation",
+                    settings: {
+                    frequency: 1234,
+                    magnitude: 5678
                     }
                 }
             ]

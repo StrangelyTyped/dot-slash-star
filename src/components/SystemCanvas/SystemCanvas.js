@@ -4,31 +4,8 @@ import konva from "konva";
 const DEG_RAD = Math.PI / 180;
 
 const SystemCanvas = (props) => {
-  const userModel = [
-    {
-      feature: "star",
-      settings: {
-      }
-    },
-    {
-      feature: "planet",
-      settings: {
-          orbit: 1.1,
-          size: 4,
-          phase: 0,
-      }
-    },
-    {
-      feature: "planet",
-      settings: {
-          orbit: 1.5,
-          size: 2,
-          phase: 0,
-      }
-    }
-  ]
+  const userModel = props.userModel;
 
-  
   const SUN_RADIUS = 40
   const EARTH_RADIUS = 2
   const CANVAS_SIZE = 1024
@@ -45,9 +22,12 @@ const SystemCanvas = (props) => {
       <Circle x={CENTER} y={CENTER} radius={SUN_RADIUS} fill="yellow" />
     </Layer>
   )
+
   const MAX_PULSATION = 0.01
-  // TODO: find pulsation freqency modifiers and compute
-  const pulsationResult = 1.001;
+
+  const pulsations = userModel.filter(config => config.feature === "pulsation")
+    // TODO: find pulsation freqency modifiers and compute
+  const pulsationResult = 0.990;
   if (pulsationResult !== 1.0){
     let points;
     const arrowLength = 20 * Math.min(1, Math.abs(pulsationResult - 1) / MAX_PULSATION);
