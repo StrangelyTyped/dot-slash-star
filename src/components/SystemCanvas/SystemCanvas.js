@@ -1,10 +1,12 @@
 import { Stage, Layer, Arrow, Text, Circle, Arc } from 'react-konva';
 import konva from "konva";
+import { calculateOrbitalPhaseAtT } from '../../data/CelestialMath';
 
 const DEG_RAD = Math.PI / 180;
 
 const SystemCanvas = (props) => {
   const userModel = props.userModel;
+  const simulationTimePct = props.simulationTimePct
 
   const SUN_RADIUS = 40
   const EARTH_RADIUS = 2
@@ -58,15 +60,16 @@ const SystemCanvas = (props) => {
 
   let planets = userModel.filter(config => config.feature === "planet")
   planets.forEach(planet => {
-    const planetOrbitRadius = planet.settings.orbit * (1/pixelScale)
+    const planetOrbitRadius = planet.settings.orbitAus * (1/pixelScale)
+    const planetPhase = calculateOrbitalPhaseAtT(planet.settings.phaseDeg, planet.settings.orbitAus, planet.settings.sizeEarths, star.settings.starMassSuns, simulationTimePct)
 
-    const xOfs = planetOrbitRadius * Math.sin(planet.settings.phase * DEG_RAD)
-    const yOfs = planetOrbitRadius * Math.cos(planet.settings.phase * DEG_RAD)
+    const xOfs = planetOrbitRadius * Math.sin(planetPhase * DEG_RAD)
+    const yOfs = planetOrbitRadius * Math.cos(planetPhase * DEG_RAD)
 
     layers.push(
       <Layer>
         <Circle x={CENTER} y={CENTER} radius={planetOrbitRadius} strokeWidth={1} stroke="grey" />
-        <Circle x={CENTER-xOfs} y={CENTER-yOfs} radius={planet.settings.size * EARTH_RADIUS} fill="brown" />
+        <Circle x={CENTER-xOfs} y={CENTER-yOfs} radius={planet.settings.sizeEarths * EARTH_RADIUS} fill="brown" />
       </Layer>
     )
   })
