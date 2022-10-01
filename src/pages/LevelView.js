@@ -6,7 +6,6 @@ import LevelData from "../data/levels";
 const drawerWidth = "25%";
 
 const LevelView = (props) => {
-
     return (
         <>
         <Box sx={{ display: 'flex' }}>
