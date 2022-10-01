@@ -7,13 +7,12 @@ const drawerWidth = "25%";
 
 const LevelView = (props) => {
 
-
     return (
         <>
         <Box sx={{ display: 'flex' }}>
             <Box
                 component="main"
-                sx={{ flexGrow: 1, height: "100vh", }}
+                sx={{ flexGrow: 1, height: "100vh", background: "black"}}
             >
                 <SystemCanvas levelId={props.level} levelData={LevelData[props.level]} />
             </Box>
