@@ -57,8 +57,8 @@ const levels = [
                 {
                     feature: "pulsation",
                     settings: {
-                        frequency: 1234,
-                        magnitude: 5678
+                        periodDays: 90,
+                        magnitudePct: 0.005
                     }
                 }
             ]

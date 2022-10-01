@@ -1,6 +1,6 @@
 import { Stage, Layer, Arrow, Text, Circle, Arc } from 'react-konva';
 import konva from "konva";
-import { calculateOrbitalPhaseAtT } from '../../data/CelestialMath';
+import { calculateOrbitalPhaseAtT, calculateTotalPulsationEffect } from '../../data/CelestialMath';
 
 const DEG_RAD = Math.PI / 180;
 
@@ -28,29 +28,30 @@ const SystemCanvas = (props) => {
   const MAX_PULSATION = 0.01
 
   const pulsations = userModel.filter(config => config.feature === "pulsation")
-    // TODO: find pulsation freqency modifiers and compute
-  const pulsationResult = 0.990;
-  if (pulsationResult !== 1.0){
+  const pulsationResult = calculateTotalPulsationEffect(pulsations, simulationTimePct);
+  const arrowLength = 20 * Math.min(1, Math.abs(pulsationResult - 1) / MAX_PULSATION);
+
+  if (arrowLength > 0){
+    const pointerSize = Math.min(arrowLength, 5);
     let points;
-    const arrowLength = 20 * Math.min(1, Math.abs(pulsationResult - 1) / MAX_PULSATION);
     if(pulsationResult > 1){
       points = [0, 20, 0, 20 - arrowLength]
     } else {
-      points = [0, 20 - arrowLength, 0, 20]
+      points = [0, 20, 0, 20 + arrowLength]
     }
     const numArrows = 8
     for(let i = 0; i < numArrows; i++){
-    layers.push(
-      <Layer x={CENTER} y={CENTER} offsetX={CENTER} offsetY={CENTER} rotation={i*(360/numArrows)}>
-        <Arrow
-          x={CENTER}
-          y={CENTER - (SUN_RADIUS + 30)}
-          points={points}
-          pointerLength={5}
-          pointerWidth={5}
-          fill={'orange'}
-          stroke={'orange'}
-          strokeWidth={1}
+      layers.push(
+        <Layer x={CENTER} y={CENTER} offsetX={CENTER} offsetY={CENTER} rotation={i*(360/numArrows)}>
+          <Arrow
+            x={CENTER}
+            y={CENTER - (SUN_RADIUS + 40)}
+            points={points}
+            pointerLength={pointerSize}
+            pointerWidth={pointerSize}
+            fill={'orange'}
+            stroke={'orange'}
+            strokeWidth={1}
           />
         </Layer>
       )
