@@ -98,7 +98,7 @@ class Home extends Component {
     }
 
     return (
-      <Stage width={window.innerWidth} height={window.innerHeight} style={{backgroundColor: "black"}}>
+      <Stage width={window.innerWidth} height={window.innerHeight} style={{backgroundImage: 'url("/map-background.jpg")', backgroundSize: "cover", backgroundPosition: "center"}}>
         <Layer>{lines}{stars}</Layer>
       </Stage>
     );
