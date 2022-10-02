@@ -1,8 +1,8 @@
 {
   "files": {
-    "main.js": "/strangelytyped.github.io/dot-slash-star/static/js/main.1bc199d6.js",
-    "index.html": "/strangelytyped.github.io/dot-slash-star/index.html",
-    "main.1bc199d6.js.map": "/strangelytyped.github.io/dot-slash-star/static/js/main.1bc199d6.js.map"
+    "main.js": "/dot-slash-star/static/js/main.1bc199d6.js",
+    "index.html": "/dot-slash-star/index.html",
+    "main.1bc199d6.js.map": "/dot-slash-star/static/js/main.1bc199d6.js.map"
   },
   "entrypoints": [
     "static/js/main.1bc199d6.js"
