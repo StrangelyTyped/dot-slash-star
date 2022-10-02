@@ -44,7 +44,7 @@ const levels = [
                         starMassSuns: 1,
                     }
                 },
-                {
+              /*  {
                     feature: "planet",
                     settings: {
                         orbitAus: 1.1,
@@ -59,22 +59,22 @@ const levels = [
                         sizeEarths: 4,
                         phaseDeg: 0,
                     }
-                },
+                },*/
                 {
                     feature: "planet",
                     settings: {
                         orbitAus: 0.5,
-                        sizeEarths: 1,
+                        sizeEarths: 3,
                         phaseDeg: 90,
                     }
                 },
-                {
+               /* {
                     feature: "pulsation",
                     settings: {
                         periodDays: 90,
                         magnitudePct: 0.005
                     }
-                }
+                }*/
             ]
         }
     }

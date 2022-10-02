@@ -42,7 +42,7 @@ const SystemConfig = (props) => {
                     <MenuItem onClick={handleClose}>Pulsation</MenuItem>
                 </Menu>
             </Toolbar>
-            <Box style={{flexGrow: 1}}>Stuff</Box>
+            <Box style={{flexGrow: 1}}>t = {Math.round(props.simulationTimePct*10000)/10000}</Box>
         </>
     );
 
