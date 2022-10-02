@@ -7,12 +7,17 @@ import {useParams} from "react-router-dom";
 
 const drawerWidth = "25%";
 
-
 const LevelView = (props) => {
     const { level } = useParams()
     const levelId = level
     const [userModel, setUserModel] = React.useState(LevelData[levelId].levelConfig.initialState)
+    const [simulationTimePct, setSimulationTimePct] = React.useState(0);
 
+    // For testing only, TODO: add slider
+    setTimeout(() => {
+        console.log("Simulation tick ", simulationTimePct)
+        setSimulationTimePct((simulationTimePct + 0.001) % 1);
+    }, 100)
 
     return (
         <>
@@ -21,7 +26,7 @@ const LevelView = (props) => {
                 component="main"
                 sx={{ flexGrow: 1, height: "100vh", background: "black"}}
             >
-                <SystemCanvas userModel={userModel} levelId={levelId} levelData={LevelData[levelId]} />
+                <SystemCanvas simulationTimePct={simulationTimePct} userModel={userModel} levelId={levelId} levelData={LevelData[levelId]} />
             </Box>
    
             <Drawer open="true"
@@ -42,7 +47,7 @@ const LevelView = (props) => {
                         spacing={2}
                         style={{height: "100%"}}>
 
-                    <SystemConfig userModel={userModel} levelId={levelId} levelData={LevelData[levelId]} />
+                    <SystemConfig simulationTimePct={simulationTimePct} userModel={userModel} levelId={levelId} levelData={LevelData[levelId]} />
                     <Paper>Chart 1 Here</Paper>
                     <Paper>Chart 2 Here</Paper>
                 </Stack>
