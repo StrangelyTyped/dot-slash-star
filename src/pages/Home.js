@@ -38,7 +38,7 @@ class Home extends Component {
   render() {
     let totalStars = 5;
 
-    let landscape = window.screen.orientation.type == "landscape-primary";
+    let landscape = window.screen.orientation.type === "landscape-primary";
 
     let starsObjs = [];
     let stars = [];
