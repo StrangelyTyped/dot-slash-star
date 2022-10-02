@@ -73,7 +73,7 @@ const LevelView = (props) => {
                     spacing={2}
                     style={{height: "100%"}}>
 
-                    <SystemConfig simulationTimePct={simulationTimePct} userModel={userModel} levelId={levelId} levelData={LevelData[levelId]} />
+                <SystemConfig simulationTimePct={simulationTimePct} userModel={userModel} levelId={levelId} levelData={LevelData[levelId]} setUserModel={setUserModel} />
                     
                 </Stack>
             </Drawer>
