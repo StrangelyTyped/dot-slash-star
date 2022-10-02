@@ -12,13 +12,13 @@ const AddPlanet = (props) => {
         props.removeMe();
       };
       const handleDistanceChange = (event, newValue) => {
-        props.setDistance(newValue);
+        props.setDistance(initialState.position, newValue);
       };
       const handleSizeChange = (event, newValue) => {
-        props.setSize(newValue);
+        props.setSize(initialState.position, newValue);
       };
       const handlePhaseChange = (event, newValue) => {
-        props.setPhase(newValue);
+        props.setPhase(initialState.position, newValue);
       };
     
     
@@ -73,7 +73,7 @@ var phaseMarks = [
     },
   ];
   return (
-    <Box sx={{ width: 300 }}>
+    <Box sx={{ width: 200 }}>
     <Typography variant="button" gutterBottom> Planet </Typography>
     <IconButton aria-label="delete"  color="primary" 
             onClick={() => {handleremove();}}
@@ -87,7 +87,7 @@ var phaseMarks = [
         onChange={handleDistanceChange}
         step={0.5}
         min={0.1}
-        max={10}
+        max={2.0}
         marks={distanceMarks}
       />
       <Typography variant="caption" gutterBottom> Size </Typography>
