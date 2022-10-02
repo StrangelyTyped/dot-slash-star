@@ -10,9 +10,7 @@ export default function App() {
       <Routes>
         <Route path="/" element={<Layout />}>
           <Route index element={<Home />} />
-          <Route path="level/1" element={<LevelView level="1" />} />
-          <Route path="level/2" element={<LevelView level="2" />} />
-          <Route path="level/3" element={<LevelView level="3" />} />
+          <Route path="level/:level" element={<LevelView />} />
         </Route>
       </Routes>
     </BrowserRouter>
