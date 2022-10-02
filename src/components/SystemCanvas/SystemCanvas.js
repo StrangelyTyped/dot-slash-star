@@ -1,4 +1,4 @@
-import { Stage, Layer, Arrow, Text, Circle, Arc } from 'react-konva';
+import { Stage, Layer, Arrow, Text, Circle, Arc, Rect, RegularPolygon } from 'react-konva';
 import konva from "konva";
 import { calculateOrbitalPhaseAtT, calculateTotalPulsationEffect } from '../../data/CelestialMath';
 
@@ -10,7 +10,7 @@ const SystemCanvas = (props) => {
 
   const SUN_RADIUS = 40
   const EARTH_RADIUS = 2
-  const CANVAS_SIZE = 1024
+  const CANVAS_SIZE = Math.floor(0.9*(window.innerWidth / 2));
   const CENTER = CANVAS_SIZE/2;
   const MAX_RADIUS_AU = 2
   let pixelScale = MAX_RADIUS_AU / (CANVAS_SIZE / 2);
@@ -75,15 +75,22 @@ const SystemCanvas = (props) => {
     )
   })
 
+
   return (
+    <>
     <Stage width={CANVAS_SIZE} height={CANVAS_SIZE}>
       <Layer>
         <Text x={10} y={10} text={"Note: Celestial body size not to scale"} fill="white" fontSize={12} />
         <Arc rotation={100} angle={340} x={CENTER} y={CENTER} outerRadius={CANVAS_SIZE/(2*MAX_RADIUS_AU)} innerRadius={CANVAS_SIZE/(2*MAX_RADIUS_AU)} stroke="lightgrey" strokeWidth={1} dash={[10,20]} />
         <Text x={CENTER - auTextSize.width / 4} y={CENTER + (CANVAS_SIZE/(2*MAX_RADIUS_AU)) - 8} fill="lightgrey" fontSize={16} text="1 AU" />
       </Layer>
+      <Layer x={CENTER + (MAX_RADIUS_AU*(1/pixelScale)) - 40} y={CENTER}>
+        <Rect x={10} y={0} fill="white" width={30} height={20} cornerRadius={5} />
+        <RegularPolygon x={0} y={0} offsetY={-10} fill="white" sides={3} radius={10} rotation={-30} cornerRadius={5} />
+      </Layer>
       {layers}
     </Stage>
+    </>
   );
 };
 
