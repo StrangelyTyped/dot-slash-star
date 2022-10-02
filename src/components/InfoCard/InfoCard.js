@@ -1,24 +1,41 @@
 import React from "react";
-import { Card, CardContent, Typography } from "@mui/material";
+import { Card, CardContent, Typography, Modal, Box } from "@mui/material";
+
+const style = {
+  position: 'absolute',
+  top: '50%',
+  left: '50%',
+  transform: 'translate(-50%, -50%)',
+  width: 400,
+  bgcolor: 'background.paper',
+  border: '2px solid #000',
+  boxShadow: 24,
+  p: 4,
+};
 
 const InfoCard = (props) => {
   return (
-    <Card sx={{ minWidth: 275 }}>
-      <CardContent>
-        <Typography variant="h5" component="div">
-          Level {props.levelId}: {props.title}
+    <Modal
+      open={props.modalOpen}
+      onClose={props.handleClose}
+      aria-labelledby="modal-modal-title"
+      aria-describedby="modal-modal-description"
+    >
+      <Box sx={style} flexGrow={1}>
+        <Typography variant="h9" component="div">
+          <p>Level {props.levelId}: {props.levelData.title}</p>
         </Typography>
-        <Typography variant="h6" component="div">
-          Summary: {props.summary}
+        <Typography variant="h10" component="div">
+          <p>{props.levelData.summary}</p>
         </Typography>
-        <Typography variant="h6" component="div">
-          Description: {props.description}
+        <Typography variant="h10" component="div">
+        <p>{props.levelData.description}</p>
         </Typography>
-        <Typography variant="h7" component="div">
-          Hint: {props.hints}
+        <Typography variant="h11" component="div">
+          <p>Hint: {props.levelData.hints}</p>
         </Typography>
-      </CardContent>
-    </Card>
+      </Box>
+    </Modal>
   )
 }
 
