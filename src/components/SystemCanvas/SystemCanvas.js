@@ -70,7 +70,7 @@ const SystemCanvas = (props) => {
     layers.push(
       <Layer>
         <Circle x={CENTER} y={CENTER} radius={planetOrbitRadius} strokeWidth={1} stroke="grey" />
-        <Circle x={CENTER-xOfs} y={CENTER-yOfs} radius={planet.settings.sizeEarths * EARTH_RADIUS} fill="brown" />
+        <Circle x={CENTER+xOfs} y={CENTER+yOfs} radius={planet.settings.sizeEarths * EARTH_RADIUS} fill="brown" />
       </Layer>
     )
   })

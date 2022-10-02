@@ -1,7 +1,8 @@
-import { Box, Drawer, Paper, Stack } from '@mui/material';
+import { Box, Drawer, Stack } from '@mui/material';
 import SystemCanvas from '../components/SystemCanvas/SystemCanvas';
 import SystemConfig from '../components/SystemConfig/SystemConfig';
 import LevelData from "../data/levels";
+import SimulationResult from '../components/SimulationResult/SimulationResult';
 import React from "react";
 import {useParams} from "react-router-dom";
 
@@ -18,6 +19,7 @@ const LevelView = (props) => {
         console.log("Simulation tick ", simulationTimePct)
         setSimulationTimePct((simulationTimePct + 0.001) % 1);
     }, 100)
+
 
     return (
         <>
@@ -40,16 +42,16 @@ const LevelView = (props) => {
                     boxSizing: 'border-box',
                     },
                 }}>
-                    <Stack
-                        direction="column"
-                        justifyContent="center"
-                        alignItems="center"
-                        spacing={2}
-                        style={{height: "100%"}}>
+                <Stack
+                    direction="column"
+                    justifyContent="center"
+                    alignItems="center"
+                    spacing={2}
+                    style={{height: "100%"}}>
 
                     <SystemConfig simulationTimePct={simulationTimePct} userModel={userModel} levelId={levelId} levelData={LevelData[levelId]} />
-                    <Paper>Chart 1 Here</Paper>
-                    <Paper>Chart 2 Here</Paper>
+                    <SimulationResult levelData={LevelData[levelId]} userModel={userModel} />
+                    
                 </Stack>
             </Drawer>
         </Box>
