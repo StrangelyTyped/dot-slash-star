@@ -62,9 +62,16 @@ const levels = [
                 {
                     feature: "planet",
                     settings: {
-                        orbitAus: 1.5,
-                        sizeEarths: 4,
-                        phaseDeg: 180,
+                        orbitAus: 0.5,
+                        sizeEarths: 3,
+                        phaseDeg: 90,
+                    }
+                },
+                {
+                    feature: "pulsation",
+                    settings: {
+                        periodDays: 90,
+                        magnitudePct: 0.005
                     }
                 }
             ]
