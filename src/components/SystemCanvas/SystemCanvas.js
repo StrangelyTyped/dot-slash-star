@@ -1,6 +1,7 @@
 import { Stage, Layer, Arrow, Text, Circle, Arc, Rect, RegularPolygon } from 'react-konva';
 import konva from "konva";
 import { calculateOrbitalPhaseAtT, calculateTotalPulsationEffect } from '../../data/CelestialMath';
+import { MAX_RADIUS_AU, OBSERVER_POSITION } from "../../data/Constants"
 
 const DEG_RAD = Math.PI / 180;
 
@@ -12,8 +13,7 @@ const SystemCanvas = (props) => {
   const EARTH_RADIUS = 2
   const CANVAS_SIZE = Math.floor(0.9*(window.innerWidth / 2));
   const CENTER = CANVAS_SIZE/2;
-  const MAX_RADIUS_AU = 2
-  let pixelScale = MAX_RADIUS_AU / (CANVAS_SIZE / 2);
+  let pixelScale = (CANVAS_SIZE / 2) / MAX_RADIUS_AU;
   let auTextSize = new konva.Text({ fontSize: 16, text: "1 AU"}).measureSize()
 
   const layers = []
@@ -61,7 +61,7 @@ const SystemCanvas = (props) => {
 
   let planets = userModel.filter(config => config.feature === "planet")
   planets.forEach(planet => {
-    const planetOrbitRadius = planet.settings.orbitAus * (1/pixelScale)
+    const planetOrbitRadius = planet.settings.orbitAus * pixelScale
     const planetPhase = calculateOrbitalPhaseAtT(planet.settings.phaseDeg, planet.settings.orbitAus, planet.settings.sizeEarths, star.settings.starMassSuns, simulationTimePct)
 
     const xOfs = planetOrbitRadius * Math.sin(planetPhase * DEG_RAD)
@@ -75,6 +75,9 @@ const SystemCanvas = (props) => {
     )
   })
 
+  const observerOfsX = OBSERVER_POSITION.radiusAu * pixelScale * Math.sin(OBSERVER_POSITION.phaseDeg * DEG_RAD)
+  const observerOfsY = OBSERVER_POSITION.radiusAu * pixelScale * Math.cos(OBSERVER_POSITION.phaseDeg * DEG_RAD)
+
 
   return (
     <>
@@ -84,7 +87,7 @@ const SystemCanvas = (props) => {
         <Arc rotation={100} angle={340} x={CENTER} y={CENTER} outerRadius={CANVAS_SIZE/(2*MAX_RADIUS_AU)} innerRadius={CANVAS_SIZE/(2*MAX_RADIUS_AU)} stroke="lightgrey" strokeWidth={1} dash={[10,20]} />
         <Text x={CENTER - auTextSize.width / 4} y={CENTER + (CANVAS_SIZE/(2*MAX_RADIUS_AU)) - 8} fill="lightgrey" fontSize={16} text="1 AU" />
       </Layer>
-      <Layer x={CENTER + (MAX_RADIUS_AU*(1/pixelScale)) - 40} y={CENTER}>
+      <Layer x={CENTER + observerOfsX} y={CENTER + observerOfsY} rotation={-(OBSERVER_POSITION.phaseDeg - 90)}>
         <Rect x={10} y={0} fill="white" width={30} height={20} cornerRadius={5} />
         <RegularPolygon x={0} y={0} offsetY={-10} fill="white" sides={3} radius={10} rotation={-30} cornerRadius={5} />
       </Layer>
