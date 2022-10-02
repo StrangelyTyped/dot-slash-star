@@ -33,6 +33,7 @@ const LevelView = (props) => {
 
     return (
         <>
+        <InfoCard handleClose={handleClose} modalOpen={modalOpen} levelId={levelId} levelData={LevelData[levelId]} />
         <Box sx={{ display: 'flex' }}>
             <Box
                 component="main"
@@ -61,7 +62,6 @@ const LevelView = (props) => {
                     <SystemConfig simulationTimePct={simulationTimePct} userModel={userModel} levelId={levelId} levelData={LevelData[levelId]} />
                     <Button variant="contained" onClick={handleOpen} >Level Info</Button>
                     <SimulationResult levelData={LevelData[levelId]} userModel={userModel} />
-                    <InfoCard handleClose={handleClose} modalOpen={modalOpen} levelId={levelId} levelData={LevelData[levelId]} />
                     
                 </Stack>
             </Drawer>
