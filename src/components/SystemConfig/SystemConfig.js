@@ -3,6 +3,7 @@ import AddIcon from '@mui/icons-material/Add'
 import { Typography, Toolbar, IconButton, Menu, MenuItem, Divider, Box } from '@mui/material';
 import AddPlanet from "../ControlComponents/AddPlanet";
 import AddPulsation from "../ControlComponents/AddPulsation";
+import { SettingsInputAntennaTwoTone } from "@mui/icons-material";
 
 
 const SystemConfig = (props) => {
@@ -15,52 +16,53 @@ const SystemConfig = (props) => {
       setAnchorEl(null);
     };
     var drawControlBoxes = ((userModel) =>  {
+        var modifiabbleModel = structuredClone(userModel);
         // skip the first item as it is always the star
-        console.log(userModel)
         var elementtList = [];
          for (var i=1; i<userModel.length; i++){
-            var settings = userModel[i].settings;
+            var settings = modifiabbleModel[i].settings;
             if (userModel[i].feature === "pulsation"){
                 elementtList.push(
                     <AddPulsation 
-                        removeMe={() => {
+                        removeMe={(position) => {
                             console.log("remove");
-                            userModel.splice(i, 1);
-                            props.setUserModel(userModel);
+                            // modifiabbleModel.splice(position, 1);
+                            // props.setUserModel(modifiabbleModel);
                         }}
-                        setPeriod={(period) => {
-                            settings.periodDays = period;
-                            props.setUserModel(userModel);
+                        setPeriod={(position, period) => {
+                            modifiabbleModel[position].settings.periodDays = period;
+                            // setState({usermodel[i].settings.periodDays: period});
+                            props.setUserModel(modifiabbleModel);
                         }}
-                        setMagnitude={(period) => {
-                            settings.magnitudePct = period;
-                            props.setUserModel(userModel);
+                        setMagnitude={(position, mag) => {
+                            modifiabbleModel[position].settings.magnitudePct = mag;
+                            props.setUserModel(modifiabbleModel);
                         }}
-                        initialState={{magnitude: settings.magnitudePct, period: settings.periodDays}}
+                        initialState={{position: i, magnitude: settings.magnitudePct, period: settings.periodDays}}
                     />
                 )
             } else if (userModel[i].feature === "planet"){
                 elementtList.push(
                     <AddPlanet 
-                        removeMe={() => {
+                        removeMe={(position) => {
                             console.log("remove");
-                            userModel.splice(i, 1);
-                            props.setUserModel(userModel);
+                            // modifiabbleModel.splice(position, 1);
+                            // props.setUserModel(modifiabbleModel);
                         }}
-                        setDistance={(distance) => {
-                            settings.orbitAus = distance;
-                            props.setUserModel(userModel);
+                        setDistance={(position, distance) => {
+                            modifiabbleModel[position].settings.orbitAus = distance;
+                            props.setUserModel(modifiabbleModel);
                             
                         }}
-                        setSize={(size) => {
-                            settings.sizeEarths = size;
-                            props.setUserModel(userModel);
+                        setSize={(position, size) => {
+                            modifiabbleModel[position].settings.sizeEarths = size;
+                            props.setUserModel(modifiabbleModel);
                         }}
-                        setPhase={(phase) => {
-                            settings.phaseDeg = phase;
-                            props.setUserModel(userModel);
+                        setPhase={(position, phase) => {
+                            modifiabbleModel[position].settings.phaseDeg = phase;
+                            props.setUserModel(modifiabbleModel);
                         }}
-                        initialState={{distance: settings.orbitAus, size: settings.sizeEarths, phase: settings.phaseDeg}}
+                        initialState={{position: i, distance: settings.orbitAus, size: settings.sizeEarths, phase: settings.phaseDeg}}
                     />
                 )
             } else {

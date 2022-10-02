@@ -14,6 +14,13 @@ const levels = [
                     }
                 },
                 {
+                    feature: "pulsation",
+                    settings: {
+                        periodDays: 140,
+                        magnitudePct: 0.004
+                    }
+                },
+                {
                     feature: "planet",
                     settings: {
                         orbitAus: 1.2,
@@ -27,13 +34,6 @@ const levels = [
                         periodDays: 90,
                         magnitudePct: 0.005
                     }
-                },
-                {
-                    feature: "pulsation",
-                    settings: {
-                        periodDays: 140,
-                        magnitudePct: 0.004
-                    }
                 }
             ],
             initialState: [
@@ -41,6 +41,14 @@ const levels = [
                     feature: "star",
                     settings: {
                         starMassSuns: 1,
+                    }
+                },
+
+                {
+                    feature: "pulsation",
+                    settings: {
+                        periodDays: 90,
+                        magnitudePct: 0.005
                     }
                 },
                 {
@@ -57,21 +65,6 @@ const levels = [
                         orbitAus: 1.5,
                         sizeEarths: 4,
                         phaseDeg: 180,
-                    }
-                },
-                {
-                    feature: "planet",
-                    settings: {
-                        orbitAus: 0.5,
-                        sizeEarths: 1,
-                        phaseDeg: 90,
-                    }
-                },
-                {
-                    feature: "pulsation",
-                    settings: {
-                        periodDays: 90,
-                        magnitudePct: 0.005
                     }
                 }
             ]

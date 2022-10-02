@@ -16,7 +16,7 @@ const LevelView = (props) => {
 
     // For testing only, TODO: add slider
     setTimeout(() => {
-        console.log("Simulation tick ", simulationTimePct)
+        // console.log("Simulation tick ", simulationTimePct)
         setSimulationTimePct((simulationTimePct + 0.001) % 1);
     }, 100)
 

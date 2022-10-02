@@ -12,10 +12,10 @@ const AddPulsation = (props) => {
       };
 
       const handlePeriodChange = (event, newValue) => {
-        props.setPeriod(newValue);
+        props.setPeriod(initialState.position, newValue);
       };
       const handleSizeChange = (event, newValue) => {
-        props.setMagnitude(newValue);
+        props.setMagnitude(initialState.position, newValue);
       };
     
     
@@ -38,21 +38,21 @@ const AddPulsation = (props) => {
       value: 365,
       label: "1 Year",
     },
-    {
-      value: 730,
-      label: "2 Years",
-    },
-    {
-      value: 1095,
-      label: "3 Years",
-    },
-    {
-      value: 1460,
-      label: "4 Years",
-    }
+    // {
+    //   value: 730,
+    //   label: "2 Years",
+    // },
+    // {
+    //   value: 1095,
+    //   label: "3 Years",
+    // },
+    // {
+    //   value: 1460,
+    //   label: "4 Years",
+    // }
   ];
   return (
-    <Box sx={{ width: 300 }}>
+    <Box sx={{ width: 200 }}>
     <Typography variant="button" gutterBottom> Pulsation </Typography>
        <IconButton aria-label="delete"  color="primary" 
             onClick={() => {handleremove();}}
@@ -67,7 +67,7 @@ const AddPulsation = (props) => {
         onChange={handlePeriodChange}
         step={5}
         min={1}
-        max={1460}
+        max={730}
         marks={periodMarks}
       />
       <Typography variant="caption" gutterBottom> Magnitude </Typography>
