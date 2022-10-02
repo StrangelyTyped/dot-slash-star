@@ -1,4 +1,4 @@
-import { Box, Drawer, Paper, Stack } from '@mui/material';
+import { Box, Drawer, Stack } from '@mui/material';
 import LevelSelect from '../components/HomeComponents/LevelSelect';
 import LevelOverview from '../components/HomeComponents/LevelOverview';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
@@ -55,11 +55,9 @@ const Home = () => {
           <Typography variant="subtitle1" component="p">
             Twinkle, Twinkle, Little Star
           </Typography>
-          {/* <Box sx={{ flexGrow: 1}} /> */}
           <Typography variant="body1" component="p">
             Learn about variable stars, how we use light curves to measure how stars are changing and how they're used to detect exoplanets.
           </Typography>
-          {/* <Box sx={{ flexGrow: 1}} /> */}
           <Box sx={{ flexGrow: 1}} />
           <Box paddingBottom={2}>
             <LevelOverview level={level} />
