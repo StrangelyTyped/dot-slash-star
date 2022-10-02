@@ -1,3 +1,4 @@
+import { SIMULATION_LENGTH_YEARS, OBSERVER_POSITION } from "./Constants";
 const AU_M = 1.496e+11
 const SUN_KG = 1.989e30
 const EARTH_KG = 5.972e24
@@ -27,15 +28,70 @@ export function calculateTotalPulsationEffect(pulsations, simulationTimePct){
     return cumulativeEffect;
 }
 
+const BASE_SUN_RADIUS_AU = 0.00465046726;
+const BASE_PLANET_RADIUS_AU = 4.25875e-5;
 export function calculateBrightnessAtT(simulationTimePct, dataModel){
     const pulsationFactor = calculateTotalPulsationEffect(dataModel.filter(config => config.feature === "pulsation"), simulationTimePct)
-    // TODO: factor planetary occlusion
-    return pulsationFactor;
+
+    const star = dataModel.filter(config => config.feature === "star")[0]
+
+    let planetFactor = 1
+    // I would love for this to work properly, but hack together for demo due to time constraints
+    dataModel.filter(config => config.feature === "planet").forEach(planet => {
+        // Planetary Occlusion
+        // OK lots of comments because math is hard
+        // For the moment let's assume the observer is at phase = 90 (because math is hard and I haven't slept enough)
+        if(planet.radiusAus > OBSERVER_POSITION.radiusAu){
+            // Planet circles behind observer
+            return;
+        }
+
+        const starRadius = BASE_SUN_RADIUS_AU * star.settings.starMassSuns
+        const planetRadius = BASE_PLANET_RADIUS_AU * planet.settings.sizeEarths
+
+        // fovSun - the angle between the observer-sun line and the edge of the sun
+        const fovSun = Math.atan(starRadius / OBSERVER_POSITION.radiusAu)
+        // Note: phase base = 90
+        const orbitalPhasePlanet = calculateOrbitalPhaseAtT(planet.settings.phaseDeg, planet.settings.orbitAus, planet.settings.sizeEarths, star.settings.starMassSuns, simulationTimePct)
+        if(orbitalPhasePlanet < 180){
+            // Planet is on far side of sun
+            //return;
+        }
+        // Orbital Offset Planet is the angle of the planet relative to the observer-sun line (from the side of the sun)
+        const orbitalPhaseOffsetPlanet = (orbitalPhasePlanet - 90) % 360;
+
+        // elevationPlanet - the distance (perpendicular to the observer-sun line) between the line and the planet
+        // In theory this can be absolute but in practice we need to potentially stack multiple planets simultaneously
+        const elevationPlanet = planet.settings.orbitAus * Math.sin(orbitalPhaseOffsetPlanet)
+
+        // Radius projection planet - the distance along the observer-sun line (From the sun) to the elevation
+        const radiusProjectionPlanet = planet.settings.orbitAus * Math.cos(orbitalPhaseOffsetPlanet)
+
+        // Lambda should be the angle between the observer-sun line and the planet (from the OBSERVER side)
+        const lambda = Math.abs(Math.atan(elevationPlanet / (OBSERVER_POSITION.radiusAu - radiusProjectionPlanet)))
+
+        // Distance between observer and centre of planet
+        const distanceObserverPlanet = elevationPlanet / Math.cos(lambda)
+
+        // A1 is the angle between the observer-sun line and the edge of the sun
+        const a1 = Math.abs(Math.atan(starRadius / OBSERVER_POSITION.radiusAu))
+
+        // A2 is the angle between the observer-sun line and the edge of the planet
+        const a2 = Math.abs(Math.atan(planetRadius / planet.settings.sizeEarths) + lambda)
+        
+        if(Math.abs(orbitalPhasePlanet - OBSERVER_POSITION.phaseDeg) < 5){
+            planetFactor -= 0.01 * (5 - Math.abs(orbitalPhasePlanet - OBSERVER_POSITION.phaseDeg))
+        }
+
+        // Remember to throw a square in here somewhere because inverse square law
+    })
+    
+    return pulsationFactor * planetFactor;
 }
 
 export function simulate(simulationResolutionPct, dataModel){
     let data = []
-    for(let i = 0; i <= 1; i += simulationResolutionPct){
+    for(let i = 0; i <= SIMULATION_LENGTH_YEARS; i += simulationResolutionPct){
         data.push({x: i, y: calculateBrightnessAtT(i, dataModel)})
     }
     return data;

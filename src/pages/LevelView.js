@@ -6,6 +6,7 @@ import SimulationResult from '../components/SimulationResult/SimulationResult';
 import InfoCard from '../components/InfoCard/InfoCard';
 import React from "react";
 import {useParams} from "react-router-dom";
+import { ANIMATION_RESOLUTION_YEARS, SIMULATION_LENGTH_YEARS } from '../data/Constants';
 
 const drawerWidth = "25%";
 
@@ -18,8 +19,7 @@ const LevelView = (props) => {
 
     // For testing only, TODO: add slider
     setTimeout(() => {
-        // console.log("Simulation tick ", simulationTimePct)
-        setSimulationTimePct((simulationTimePct + 0.001) % 1);
+        setSimulationTimePct((simulationTimePct + ANIMATION_RESOLUTION_YEARS) % SIMULATION_LENGTH_YEARS);
     }, 100)
 
     const handleOpen = () => {
