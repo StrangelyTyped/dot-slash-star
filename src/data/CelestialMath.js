@@ -26,3 +26,17 @@ export function calculateTotalPulsationEffect(pulsations, simulationTimePct){
     })
     return cumulativeEffect;
 }
+
+export function calculateBrightnessAtT(simulationTimePct, dataModel){
+    const pulsationFactor = calculateTotalPulsationEffect(dataModel.filter(config => config.feature === "pulsation"), simulationTimePct)
+    // TODO: factor planetary occlusion
+    return pulsationFactor;
+}
+
+export function simulate(simulationResolutionPct, dataModel){
+    let data = []
+    for(let i = 0; i <= 1; i += simulationResolutionPct){
+        data.push({x: i, y: calculateBrightnessAtT(i, dataModel)})
+    }
+    return data;
+}

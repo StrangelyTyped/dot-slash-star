@@ -1,7 +1,8 @@
-import { Box, Drawer, Paper, Stack } from '@mui/material';
+import { Box, Drawer, Stack } from '@mui/material';
 import SystemCanvas from '../components/SystemCanvas/SystemCanvas';
 import SystemConfig from '../components/SystemConfig/SystemConfig';
 import LevelData from "../data/levels";
+import SimulationResult from '../components/SimulationResult/SimulationResult';
 import React from "react";
 import {useParams} from "react-router-dom";
 
@@ -19,15 +20,40 @@ const LevelView = (props) => {
         setSimulationTimePct((simulationTimePct + 0.001) % 1);
     }, 100)
 
+
     return (
         <>
         <Box sx={{ display: 'flex' }}>
+
+            <Drawer open="true"
+                anchor="left"
+                variant="permanent"
+                sx={{
+                    width: drawerWidth,
+                    flexShrink: 0,
+                    '& .MuiDrawer-paper': {
+                    width: drawerWidth,
+                    boxSizing: 'border-box',
+                    },
+                }}>
+                <Stack
+                    direction="column"
+                    justifyContent="center"
+                    alignItems="center"
+                    spacing={2}
+                    style={{height: "100%"}}>
+
+                    <SimulationResult levelData={LevelData[levelId]} userModel={userModel} />
+                    
+                </Stack>
+            </Drawer>
+
             <Box
-                component="main"
-                sx={{ flexGrow: 1, height: "100vh", background: "black"}}
+                sx={{ flexGrow: 1, height: "100vh", background: "black", overflow: "auto"}}
             >
                 <SystemCanvas simulationTimePct={simulationTimePct} userModel={userModel} levelId={levelId} levelData={LevelData[levelId]} />
             </Box>
+
    
             <Drawer open="true"
                 anchor="right"
@@ -40,15 +66,15 @@ const LevelView = (props) => {
                     boxSizing: 'border-box',
                     },
                 }}>
-                    <Stack
-                        direction="column"
-                        justifyContent="center"
-                        alignItems="center"
-                        spacing={2}
-                        style={{height: "100%"}}>
-                    <SystemConfig simulationTimePct={simulationTimePct} userModel={userModel} levelId={levelId} levelData={LevelData[levelId]} setUserModel={setUserModel} />
-                    <Paper>Chart 1 Here</Paper>
-                    <Paper>Chart 2 Here</Paper>
+                <Stack
+                    direction="column"
+                    justifyContent="center"
+                    alignItems="center"
+                    spacing={2}
+                    style={{height: "100%"}}>
+
+                <SystemConfig simulationTimePct={simulationTimePct} userModel={userModel} levelId={levelId} levelData={LevelData[levelId]} setUserModel={setUserModel} />
+                    
                 </Stack>
             </Drawer>
         </Box>

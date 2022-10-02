@@ -20,6 +20,20 @@ const levels = [
                         sizeEarths: 3,
                         phaseDeg: 0,
                     }
+                },
+                {
+                    feature: "pulsation",
+                    settings: {
+                        periodDays: 90,
+                        magnitudePct: 0.005
+                    }
+                },
+                {
+                    feature: "pulsation",
+                    settings: {
+                        periodDays: 140,
+                        magnitudePct: 0.004
+                    }
                 }
             ],
             initialState: [
