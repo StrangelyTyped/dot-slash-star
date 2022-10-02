@@ -1,6 +1,13 @@
 # dot-slash-star
 Dot Slash Star
-Produced as part of the Space Apps Challenge 2022 Hackathon https://2022.spaceappschallenge.org/challenges/2022-challenges/twinkle-twinkle-little-star/details 
+Produced as part of the Space Apps Challenge 2022 Hackathon https://2022.spaceappschallenge.org/challenges/2022-challenges/twinkle-twinkle-little-star/details
+
+# Demo
+The demo project is viewabale at [https://strangelytyped.github.io/dot-slash-star/](https://strangelytyped.github.io/dot-slash-star/)
+
+# Getting Started
+npm install
+npm start
 
 # Assets
 Sourced from https://images.nasa.gov/

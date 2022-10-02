@@ -28,7 +28,7 @@ const InfoCard = (props) => {
           <p>{props.levelData.summary}</p>
         </Typography>
         <Typography variant="h10" component="div">
-        <p>{props.levelData.description}</p>
+          {props.levelData.descriptionJsx}
         </Typography>
       </Box>
     </Modal>
