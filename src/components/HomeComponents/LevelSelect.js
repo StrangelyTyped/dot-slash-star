@@ -44,7 +44,14 @@ const LevelSelect = (props) => {
         }
 
         stars.push(
-            <LevelStar level={`${index + 1}`} x={starX} y={starY} width={starWidth} height={starHeight} />
+            <LevelStar
+              level={`${index + 1}`}
+              x={starX}
+              y={starY}
+              width={starWidth}
+              height={starHeight}
+              onHover={() => props.onHover(index)}
+            />
         );
 
         starsObjs.push({

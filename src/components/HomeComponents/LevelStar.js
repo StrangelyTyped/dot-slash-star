@@ -15,6 +15,7 @@ const LevelStar = (props) => {
                 numPoints={5}
                 innerRadius={props.width / 2}
                 outerRadius={props.height / 2}
+                onMouseOver={props.onHover}
             />
             <Text
                 x={props.x - 6}
@@ -25,6 +26,7 @@ const LevelStar = (props) => {
                 align={"center"}
                 fontSize={20}
                 fontStyle={"bold"}
+                onMouseOver={props.onHover}
             />
       </>
     )
