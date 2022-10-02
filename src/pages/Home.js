@@ -1,108 +1,76 @@
-import React, { Component } from 'react';
-import { Stage, Layer, Star, Text, Line } from 'react-konva';
-import { useNavigate } from 'react-router-dom';
+import { Box, Drawer, Stack } from '@mui/material';
+import LevelSelect from '../components/HomeComponents/LevelSelect';
+import LevelOverview from '../components/HomeComponents/LevelOverview';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faGithub } from '@fortawesome/free-brands-svg-icons'
+import Typography from '@mui/material/Typography';
+import React from "react";
 
-function randomNumber(min, max) { 
-    return Math.random() * (max - min) + min;
-} 
+const DRAWER_WIDTH_PERCENT = 25;
 
-function MapStar(props) {
-    const navigate = useNavigate();
-    
-    return (
-        <>
-            <Star
-                x={props.x}
-                y={props.y}
-                fill={"yellow"}
-                onClick={() => navigate(`/level/${props.level}`)}
-                numPoints={5}
-                innerRadius={props.width / 2}
-                outerRadius={props.height / 2}
-            />
-            <Text
-                x={props.x - 6}
-                y={props.y - 8}
-                text={props.level}
-                fill={"black"}
-                onClick={() => navigate(`/level/${props.level}`)}
-                align={"center"}
-                fontSize={20}
-                fontStyle={"bold"}
-            />
-      </>
-    );
-}
+const Home = () => {
+  const [level, setLevel] = React.useState(0)
 
-class Home extends Component {
-  render() {
-    let totalStars = 5;
-
-    let landscape = window.screen.orientation.type === "landscape-primary";
-
-    let starsObjs = [];
-    let stars = [];
-    let lines = [];
-
-    for (let index = 0; index < totalStars; index++) {
-        var starWidth;
-        var starHeight;
-        var starX;
-        var starY;
-
-        if (landscape) {
-          let maxWidth = window.innerWidth / totalStars;
-
-          starWidth = maxWidth / 4;
-          starHeight = maxWidth / 2;
-
-          let yPadding = starHeight / 1.5;
-
-          starX = (index * maxWidth) + (maxWidth / 2);
-          starY = randomNumber(yPadding, window.innerHeight - yPadding);
-        } else {
-          let maxHeight = window.innerHeight / totalStars;
-
-          starWidth = maxHeight / 4;
-          starHeight = maxHeight / 2;
-
-          let xPadding = starWidth * 1.5;
-
-          starX = randomNumber(xPadding, window.innerWidth - xPadding);
-          starY = (index * maxHeight) + (maxHeight / 2);
-        }
-
-        stars.push(
-            <MapStar level={`${index + 1}`} x={starX} y={starY} width={starWidth} height={starHeight} />
-        );
-
-        starsObjs.push({
-          level: index + 1,
-          x: starX,
-          y: starY,
-          width: starWidth,
-          height: starHeight
-        })
-    }
-
-    for (let index = 0; index < totalStars - 1; index ++) {
-      let starFrom = starsObjs[index];
-      let starTo = starsObjs[index + 1];
-
-      lines.push(
-        <Line
-          points={[starFrom.x, starFrom.y, starTo.x, starTo.y]}
-          stroke={"grey"}
+  return (
+    <>
+    <Box sx={{ display: 'flex' }}>
+      <Box
+        component="main"
+        sx={{ flexGrow: 1, height: "100vh"}}
+      >
+        <LevelSelect
+          width={window.innerWidth * (1 - DRAWER_WIDTH_PERCENT / 100)}
+          height={window.innerHeight}
+          onHover={(level) => {
+            setLevel(level)
+          }}
         />
-      )
-    }
+      </Box>
 
-    return (
-      <Stage width={window.innerWidth} height={window.innerHeight} style={{backgroundImage: 'url("/map-background.jpg")', backgroundSize: "cover", backgroundPosition: "center"}}>
-        <Layer>{lines}{stars}</Layer>
-      </Stage>
-    );
-  }
+      <Drawer open="true"
+        anchor="right"
+        variant="permanent"
+        sx={{
+          width: `${DRAWER_WIDTH_PERCENT}%`,
+          flexShrink: 0,
+          '& .MuiDrawer-paper': {
+            width: `${DRAWER_WIDTH_PERCENT}%`,
+            boxSizing: 'border-box',
+          }
+        }}
+      >
+        <Stack
+          direction="column"
+          spacing={2}
+          style={{height: "100%"}}
+          padding={2}
+          alignItems="center"
+        >
+          <Stack direction="row" style={{maxHeight: "150px"}} justifyContent="center" alignItems="center">
+              <img src="/nasa-spaceapps-logo-circle.png" style={{height: "100%", width: "auto"}} onClick={() => window.location.href = "https://www.spaceappschallenge.org/"} />
+          </Stack>
+          <Typography variant="h4" component="h4">
+            Dot Slash Star
+          </Typography>
+          <Typography variant="subtitle1" component="p">
+            Twinkle, Twinkle, Little Star
+          </Typography>
+          <Typography variant="body1" component="p">
+            Learn about variable stars, how we use light curves to measure how stars are changing and how they're used to detect exoplanets.
+          </Typography>
+          <Box sx={{ flexGrow: 1}} />
+          <Box paddingBottom={2}>
+            <LevelOverview level={level} />
+          </Box>
+          <Stack direction="row" spacing={1} justifyContent="center" alignItems="center">
+            <FontAwesomeIcon icon={faGithub} />
+            <a href="https://github.com/StrangelyTyped/dot-slash-star" style={{color: "black", verticalAlign: "middle"}}>GitHub - StrangelyTyped/dot-slash-star</a>
+          </Stack>
+        </Stack>
+      </Drawer>
+      </Box>
+    </>
+  )
 }
 
 export default Home;
