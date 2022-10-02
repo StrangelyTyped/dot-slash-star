@@ -1,13 +1,14 @@
 import React from 'react';
 import LevelStar from './LevelStar';
 import { Stage, Layer, Line } from 'react-konva';
+import LevelData from "../../data/levels";
 
 function randomNumber(min, max) { 
     return Math.random() * (max - min) + min;
 }
 
 const LevelSelect = (props) => {
-    let totalStars = 5;
+    let totalStars = LevelData.length - 1;
 
     let landscape = window.screen.orientation.type === "landscape-primary";
 
