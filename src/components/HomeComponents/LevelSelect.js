@@ -78,7 +78,7 @@ const LevelSelect = (props) => {
     }
 
     return (
-        <Stage width={props.width} height={props.height} style={{backgroundImage: 'url("/map-background.jpg")', backgroundSize: "cover", backgroundPosition: "center"}}>
+        <Stage width={props.width} height={props.height} style={{backgroundImage: 'url("map-background.jpg")', backgroundSize: "cover", backgroundPosition: "center"}}>
             <Layer>{lines}{stars}</Layer>
         </Stage>
     )

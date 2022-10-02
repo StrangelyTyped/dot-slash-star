@@ -47,7 +47,7 @@ const Home = () => {
           alignItems="center"
         >
           <Stack direction="row" style={{maxHeight: "150px"}} justifyContent="center" alignItems="center">
-              <img src="/nasa-spaceapps-logo-circle.png" style={{height: "100%", width: "auto"}} onClick={() => window.location.href = "https://www.spaceappschallenge.org/"} />
+              <img src="nasa-spaceapps-logo-circle.png" style={{height: "100%", width: "auto"}} onClick={() => window.location.href = "https://www.spaceappschallenge.org/"} />
           </Stack>
           <Typography variant="h4" component="h4">
             Dot Slash Star
