@@ -24,12 +24,36 @@ const LevelView = (props) => {
     return (
         <>
         <Box sx={{ display: 'flex' }}>
+
+            <Drawer open="true"
+                anchor="left"
+                variant="permanent"
+                sx={{
+                    width: drawerWidth,
+                    flexShrink: 0,
+                    '& .MuiDrawer-paper': {
+                    width: drawerWidth,
+                    boxSizing: 'border-box',
+                    },
+                }}>
+                <Stack
+                    direction="column"
+                    justifyContent="center"
+                    alignItems="center"
+                    spacing={2}
+                    style={{height: "100%"}}>
+
+                    <SimulationResult levelData={LevelData[levelId]} userModel={userModel} />
+                    
+                </Stack>
+            </Drawer>
+
             <Box
-                component="main"
-                sx={{ flexGrow: 1, height: "100vh", background: "black"}}
+                sx={{ flexGrow: 1, height: "100vh", background: "black", overflow: "auto"}}
             >
                 <SystemCanvas simulationTimePct={simulationTimePct} userModel={userModel} levelId={levelId} levelData={LevelData[levelId]} />
             </Box>
+
    
             <Drawer open="true"
                 anchor="right"
@@ -50,7 +74,6 @@ const LevelView = (props) => {
                     style={{height: "100%"}}>
 
                     <SystemConfig simulationTimePct={simulationTimePct} userModel={userModel} levelId={levelId} levelData={LevelData[levelId]} />
-                    <SimulationResult levelData={LevelData[levelId]} userModel={userModel} />
                     
                 </Stack>
             </Drawer>
