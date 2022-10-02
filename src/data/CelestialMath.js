@@ -4,6 +4,7 @@ const EARTH_KG = 5.972e24
 const EARTH_YEAR_SECONDS = 31558150; // Math assumes that t=1 is 1 earth year
 const EARTH_DAY_SECONDS = 86400;
 
+// Assume circular orbit - spherical chickens in a vacuum etc
 export function calculateOrbitalPhaseAtT(startPhaseDeg, orbitAus, sizeEarths, solarMassSuns, simulationTimePct){
     // T² = 4 * π² * a³ / (G * (M + m))
     const G = 6.674e-11
@@ -23,6 +24,5 @@ export function calculateTotalPulsationEffect(pulsations, simulationTimePct){
         const amplitude = pulsation.settings.magnitudePct * Math.sin(Math.PI * 2 * phase)
         cumulativeEffect += amplitude
     })
-    console.log("CumulativeEffect", cumulativeEffect)
     return cumulativeEffect;
 }
