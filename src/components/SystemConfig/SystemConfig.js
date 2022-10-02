@@ -102,7 +102,7 @@ const SystemConfig = (props) => {
                 </Menu>
             </Toolbar>
             {drawControlBoxes(props.userModel)}
-            <Box style={{flexGrow: 1}}>Stuff</Box>
+            <Box style={{flexGrow: 1}}></Box>
         </>
     );
 
