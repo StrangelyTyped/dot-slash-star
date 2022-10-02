@@ -3,7 +3,6 @@ const levels = [
     {
         title: "Planetary Occlusion 1",
         summary: "Some summary text here, maybe for a level-select tooltip",
-        hints: "there is one planet on this level",
         description: "Long descriptive text that we'll show inside the level, perhaps in a dialog of some kind",
         levelConfig: {
             enabledFeatures: ["planets"],
@@ -43,7 +42,7 @@ const levels = [
                     settings: {
                         orbitAus: 1.5,
                         sizeEarths: 4,
-                        phaseDeg: 0,
+                        phaseDeg: 180,
                     }
                 },
                 {
