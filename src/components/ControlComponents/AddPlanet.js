@@ -1,4 +1,4 @@
-import * as React from "react";
+import React, { useState }  from "react";
 import Box from "@mui/material/Box";
 import IconButton from "@mui/material/IconButton";
 import Slider from "@mui/material/Slider";
@@ -9,13 +9,12 @@ const AddPlanet = (props) => {
         console.log("remove this AddPlanetComponent")
         props.removeMe();
       };
-    //   HOW DO I PASS THIS BACK I HAVE FORGOTTEN
-    
+
       const handleDistanceChange = (event, newValue) => {
-        setValue(newValue);
+        props.setDistance(newValue);
       };
       const handleSizeChange = (event, newValue) => {
-        setValue(newValue);
+        props.setSize(newValue);
       };
     
     
@@ -53,6 +52,7 @@ const AddPlanet = (props) => {
       <Slider
         aria-label="Always visible"
         defaultValue={1}
+        onChange={handleDistanceChange}
         step={0.5}
         min={0}
         max={10}
@@ -63,15 +63,16 @@ const AddPlanet = (props) => {
       <Slider
         aria-label="Always visible"
         defaultValue={1}
+        onChange={handleSizeChange}
         step={0.5}
         min={0}
         max={10}
         marks={sizeMarks}
         valueLabelDisplay="on"
       />
-       <IconButton aria-label="delete"  color="primary"onClick={() => {
-            handleremove();
-        }}>
+       <IconButton aria-label="delete"  color="primary" 
+            onClick={() => {handleremove();}}
+        >
         <DeleteIcon />
         </IconButton>
     </Box>

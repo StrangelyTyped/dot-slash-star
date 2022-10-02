@@ -2,7 +2,7 @@ import { Box, Drawer, Paper, Stack } from '@mui/material';
 import SystemCanvas from '../components/SystemCanvas/SystemCanvas';
 import SystemConfig from '../components/SystemConfig/SystemConfig';
 import LevelData from "../data/levels";
-import AddPlannet from "../components/ControlComponents/AddPlanet"
+import AddPlanet from "../components/ControlComponents/AddPlanet"
 
 const drawerWidth = "25%";
 
@@ -38,7 +38,12 @@ const LevelView = (props) => {
                         style={{height: "100%"}}>
 
                     <SystemConfig levelId={props.level} levelData={LevelData[props.level]} />
-                    <AddPlannet />
+                    {/* TODO remove this hardcoded AddPlanet form */}
+                    <AddPlanet 
+                        removeMe={() => {console.log("remove");}}
+                        setDistance={(distance) => {console.log("set distance: " + distance);}}
+                        setSize={(size) => {console.log("set size: " + size);}}
+                        />
                     <Paper>Chart 1 Here</Paper>
                     <Paper>Chart 2 Here</Paper>
                 </Stack>
