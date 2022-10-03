@@ -20,7 +20,7 @@ const SystemCanvas = (props) => {
 
   const star = userModel.filter(config => config.feature === "star")[0]
   layers.push(
-    <Layer>
+    <Layer key="star">
       <Circle x={CENTER} y={CENTER} radius={SUN_RADIUS} fill="yellow" />
     </Layer>
   )
@@ -42,7 +42,7 @@ const SystemCanvas = (props) => {
     const numArrows = 8
     for(let i = 0; i < numArrows; i++){
       layers.push(
-        <Layer x={CENTER} y={CENTER} offsetX={CENTER} offsetY={CENTER} rotation={i*(360/numArrows)}>
+        <Layer x={CENTER} y={CENTER} offsetX={CENTER} offsetY={CENTER} rotation={i*(360/numArrows)} key={"pulse-arrow-" + i}>
           <Arrow
             x={CENTER}
             y={CENTER - (SUN_RADIUS + 40)}
@@ -60,7 +60,7 @@ const SystemCanvas = (props) => {
   
 
   let planets = userModel.filter(config => config.feature === "planet")
-  planets.forEach(planet => {
+  planets.forEach((planet, idx) => {
     const planetOrbitRadius = planet.settings.orbitAus * pixelScale
     const planetPhase = calculateOrbitalPhaseAtT(planet.settings.phaseDeg, planet.settings.orbitAus, planet.settings.sizeEarths, star.settings.starMassSuns, simulationTimePct)
 
@@ -68,7 +68,7 @@ const SystemCanvas = (props) => {
     const yOfs = planetOrbitRadius * Math.cos(planetPhase * DEG_RAD)
 
     layers.push(
-      <Layer>
+      <Layer key={"planet-" + idx}>
         <Circle x={CENTER} y={CENTER} radius={planetOrbitRadius} strokeWidth={1} stroke="grey" />
         <Circle x={CENTER+xOfs} y={CENTER+yOfs} radius={planet.settings.sizeEarths * EARTH_RADIUS} fill="brown" />
       </Layer>

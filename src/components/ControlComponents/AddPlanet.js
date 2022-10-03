@@ -1,4 +1,4 @@
-import React, { useState }  from "react";
+import React from "react";
 import Box from "@mui/material/Box";
 import IconButton from "@mui/material/IconButton";
 import Slider from "@mui/material/Slider";
@@ -88,6 +88,7 @@ var phaseMarks = [
         step={0.1}
         min={0.1}
         max={2.0}
+        valueLabelDisplay="auto"
         marks={distanceMarks}
       />
       <Typography variant="caption" gutterBottom> Size </Typography>
@@ -98,6 +99,7 @@ var phaseMarks = [
         step={0.1}
         min={0.1}
         max={10}
+        valueLabelDisplay="auto"
         marks={sizeMarks}
       />
       <Typography variant="caption" gutterBottom> Phase </Typography>
@@ -108,6 +110,7 @@ var phaseMarks = [
         step={5}
         min={0}
         max={360}
+        valueLabelDisplay="auto"
         marks={phaseMarks}
       />
     </Box>

@@ -38,7 +38,7 @@ const LevelView = (props) => {
         <InfoCard handleClose={handleClose} modalOpen={modalOpen} levelId={levelId} levelData={LevelData[levelId]} />
         <Box sx={{ display: 'flex' }}>
 
-            <Drawer open="true"
+            <Drawer open={true}
                 anchor="left"
                 variant="permanent"
                 sx={{
@@ -53,9 +53,10 @@ const LevelView = (props) => {
                     direction="column"
                     justifyContent="center"
                     alignItems="center"
-                    spacing={2}
-                    style={{height: "100%"}}>
-                    <Button variant="contained" onClick={handleOpen} >Level Info</Button>
+                    spacing={2}>
+                    <Box sx={{p: "10px"}}>
+                        <Button variant="contained" onClick={handleOpen} >Level Info</Button>
+                    </Box>
                     <SimulationResult levelData={LevelData[levelId]} userModel={userModel} />
                     
                 </Stack>
@@ -68,7 +69,7 @@ const LevelView = (props) => {
             </Box>
 
    
-            <Drawer open="true"
+            <Drawer open={true}
                 anchor="right"
                 variant="permanent"
                 sx={{
@@ -84,7 +85,7 @@ const LevelView = (props) => {
                     justifyContent="center"
                     alignItems="center"
                     spacing={2}
-                    style={{height: "100%"}}>
+                   >
                 <SystemConfig simulationTimePct={simulationTimePct} userModel={userModel} levelId={levelId} levelData={LevelData[levelId]} setUserModel={setUserModel} />
                     
                 </Stack>
