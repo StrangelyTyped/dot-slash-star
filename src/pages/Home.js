@@ -12,6 +12,7 @@ const Home = () => {
   const [level, setLevel] = React.useState(0)
 
   const levelSelectOnHover = React.useCallback((level) => setLevel(level), [setLevel])
+  const levelSelectOnUnhover = React.useCallback(() => setLevel(0), [setLevel])
 
   return (
     <>
@@ -24,10 +25,11 @@ const Home = () => {
           width={window.innerWidth * (1 - DRAWER_WIDTH_PERCENT / 100)}
           height={window.innerHeight}
           onHover={levelSelectOnHover}
+          onUnhover={levelSelectOnUnhover}
         />
       </Box>
 
-      <Drawer open="true"
+      <Drawer open={true}
         anchor="right"
         variant="permanent"
         sx={{
@@ -47,7 +49,7 @@ const Home = () => {
           alignItems="center"
         >
           <Stack direction="row" style={{maxHeight: "150px"}} justifyContent="center" alignItems="center">
-              <img src="/nasa-spaceapps-logo-circle.png" style={{height: "100%", width: "auto"}} onClick={() => window.location.href = "https://www.spaceappschallenge.org/"} />
+              <img src="/nasa-spaceapps-logo-circle.png" alt="NASA SpaceApps Challenge Logo" style={{height: "100%", width: "auto"}} onClick={() => window.location.href = "https://www.spaceappschallenge.org/"} />
           </Stack>
           <Typography variant="h4" component="h4">
             Dot Slash Star

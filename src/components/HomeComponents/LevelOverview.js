@@ -2,10 +2,10 @@ import LevelData from "../../data/levels";
 import { Paper, Stack, Typography } from '@mui/material';
 
 const LevelOverview = (props) => {
-    let level = LevelData[props.level + 1]
+    let level = LevelData[props.level]
     
-    if (level === undefined) {
-        return <p>UNKNOWN</p>
+    if (!level) {
+        return <></>
     }
 
     return (

@@ -17,10 +17,12 @@ const LevelView = (props) => {
     const [simulationTimePct, setSimulationTimePct] = React.useState(0);
     const [modalOpen, setModalOpen] = React.useState(true);
 
-    // For testing only, TODO: add slider
-    setTimeout(() => {
-        setSimulationTimePct((simulationTimePct + ANIMATION_RESOLUTION_YEARS) % SIMULATION_LENGTH_YEARS);
-    }, 100)
+    React.useEffect(() => {
+        // For testing only, TODO: add slider
+        setTimeout(() => {
+            setSimulationTimePct((simulationTimePct + ANIMATION_RESOLUTION_YEARS) % SIMULATION_LENGTH_YEARS);
+        }, 100)
+    })
 
     const handleOpen = () => {
         console.log(modalOpen)
