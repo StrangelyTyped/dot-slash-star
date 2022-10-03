@@ -41,7 +41,7 @@ export function calculateBrightnessAtT(simulationTimePct, dataModel){
         // Planetary Occlusion
         // OK lots of comments because math is hard
         // For the moment let's assume the observer is at phase = 90 (because math is hard and I haven't slept enough)
-        if(planet.radiusAus > OBSERVER_POSITION.radiusAu){
+        if(planet.orbitAus > OBSERVER_POSITION.radiusAu){
             // Planet circles behind observer
             return;
         }
@@ -49,13 +49,11 @@ export function calculateBrightnessAtT(simulationTimePct, dataModel){
         const starRadius = BASE_SUN_RADIUS_AU * star.settings.starMassSuns
         const planetRadius = BASE_PLANET_RADIUS_AU * planet.settings.sizeEarths
 
-        // fovSun - the angle between the observer-sun line and the edge of the sun
-        const fovSun = Math.atan(starRadius / OBSERVER_POSITION.radiusAu)
         // Note: phase base = 90
         const orbitalPhasePlanet = calculateOrbitalPhaseAtT(planet.settings.phaseDeg, planet.settings.orbitAus, planet.settings.sizeEarths, star.settings.starMassSuns, simulationTimePct)
-        if(orbitalPhasePlanet < 180){
+        if(orbitalPhasePlanet > 180){
             // Planet is on far side of sun
-            //return;
+            return;
         }
         // Orbital Offset Planet is the angle of the planet relative to the observer-sun line (from the side of the sun)
         const orbitalPhaseOffsetPlanet = (orbitalPhasePlanet - 90) % 360;
