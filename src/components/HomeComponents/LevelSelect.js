@@ -84,4 +84,4 @@ const LevelSelect = (props) => {
     )
 }
 
-export default LevelSelect;
+export default React.memo(LevelSelect);

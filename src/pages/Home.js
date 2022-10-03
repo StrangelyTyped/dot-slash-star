@@ -11,6 +11,8 @@ const DRAWER_WIDTH_PERCENT = 25;
 const Home = () => {
   const [level, setLevel] = React.useState(0)
 
+  const levelSelectOnHover = React.useCallback((level) => setLevel(level), [setLevel])
+
   return (
     <>
     <Box sx={{ display: 'flex' }}>
@@ -21,9 +23,7 @@ const Home = () => {
         <LevelSelect
           width={window.innerWidth * (1 - DRAWER_WIDTH_PERCENT / 100)}
           height={window.innerHeight}
-          onHover={(level) => {
-            setLevel(level)
-          }}
+          onHover={levelSelectOnHover}
         />
       </Box>
 
