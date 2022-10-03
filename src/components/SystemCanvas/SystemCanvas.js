@@ -1,4 +1,4 @@
-import { Stage, Layer, Arrow, Text, Circle, Arc, Rect, RegularPolygon } from 'react-konva';
+import { Stage, Layer, Arrow, Text, Circle, Arc, Rect, RegularPolygon, Group } from 'react-konva';
 import konva from "konva";
 import { calculateOrbitalPhaseAtT, calculateTotalPulsationEffect } from '../../data/CelestialMath';
 import { MAX_RADIUS_AU, OBSERVER_POSITION } from "../../data/Constants"
@@ -20,9 +20,9 @@ const SystemCanvas = (props) => {
 
   const star = userModel.filter(config => config.feature === "star")[0]
   layers.push(
-    <Layer key="star">
+    <Group key="star">
       <Circle x={CENTER} y={CENTER} radius={SUN_RADIUS} fill="yellow" />
-    </Layer>
+    </Group>
   )
 
   const MAX_PULSATION = 0.01
@@ -42,7 +42,7 @@ const SystemCanvas = (props) => {
     const numArrows = 8
     for(let i = 0; i < numArrows; i++){
       layers.push(
-        <Layer x={CENTER} y={CENTER} offsetX={CENTER} offsetY={CENTER} rotation={i*(360/numArrows)} key={"pulse-arrow-" + i}>
+        <Group x={CENTER} y={CENTER} offsetX={CENTER} offsetY={CENTER} rotation={i*(360/numArrows)} key={"pulse-arrow-" + i}>
           <Arrow
             x={CENTER}
             y={CENTER - (SUN_RADIUS + 40)}
@@ -53,7 +53,7 @@ const SystemCanvas = (props) => {
             stroke={'orange'}
             strokeWidth={1}
           />
-        </Layer>
+        </Group>
       )
     }
   }
@@ -68,10 +68,10 @@ const SystemCanvas = (props) => {
     const yOfs = planetOrbitRadius * Math.cos(planetPhase * DEG_RAD)
 
     layers.push(
-      <Layer key={"planet-" + idx}>
+      <Group key={"planet-" + idx}>
         <Circle x={CENTER} y={CENTER} radius={planetOrbitRadius} strokeWidth={1} stroke="grey" />
         <Circle x={CENTER+xOfs} y={CENTER+yOfs} radius={planet.settings.sizeEarths * EARTH_RADIUS} fill="brown" />
-      </Layer>
+      </Group>
     )
   })
 
@@ -83,15 +83,17 @@ const SystemCanvas = (props) => {
     <>
     <Stage width={CANVAS_SIZE} height={CANVAS_SIZE}>
       <Layer>
-        <Text x={10} y={10} text={"Note: Celestial body size not to scale"} fill="white" fontSize={12} />
-        <Arc rotation={100} angle={340} x={CENTER} y={CENTER} outerRadius={CANVAS_SIZE/(2*MAX_RADIUS_AU)} innerRadius={CANVAS_SIZE/(2*MAX_RADIUS_AU)} stroke="lightgrey" strokeWidth={1} dash={[10,20]} />
-        <Text x={CENTER - auTextSize.width / 4} y={CENTER + (CANVAS_SIZE/(2*MAX_RADIUS_AU)) - 8} fill="lightgrey" fontSize={16} text="1 AU" />
+        <Group>
+          <Text x={10} y={10} text={"Note: Celestial body size not to scale"} fill="white" fontSize={12} />
+          <Arc rotation={100} angle={340} x={CENTER} y={CENTER} outerRadius={CANVAS_SIZE/(2*MAX_RADIUS_AU)} innerRadius={CANVAS_SIZE/(2*MAX_RADIUS_AU)} stroke="lightgrey" strokeWidth={1} dash={[10,20]} />
+          <Text x={CENTER - auTextSize.width / 4} y={CENTER + (CANVAS_SIZE/(2*MAX_RADIUS_AU)) - 8} fill="lightgrey" fontSize={16} text="1 AU" />
+        </Group>
+        <Group x={CENTER + observerOfsX} y={CENTER + observerOfsY} rotation={-(OBSERVER_POSITION.phaseDeg - 90)}>
+          <Rect x={10} y={0} fill="white" width={30} height={20} cornerRadius={5} />
+          <RegularPolygon x={0} y={0} offsetY={-10} fill="white" sides={3} radius={10} rotation={-30} cornerRadius={5} />
+        </Group>
+        {layers}
       </Layer>
-      <Layer x={CENTER + observerOfsX} y={CENTER + observerOfsY} rotation={-(OBSERVER_POSITION.phaseDeg - 90)}>
-        <Rect x={10} y={0} fill="white" width={30} height={20} cornerRadius={5} />
-        <RegularPolygon x={0} y={0} offsetY={-10} fill="white" sides={3} radius={10} rotation={-30} cornerRadius={5} />
-      </Layer>
-      {layers}
     </Stage>
     </>
   );
