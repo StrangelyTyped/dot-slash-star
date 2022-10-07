@@ -5,87 +5,74 @@ import Slider from "@mui/material/Slider";
 import DeleteIcon from '@mui/icons-material/Delete';
 import Typography from '@mui/material/Typography';
 
-const AddPlanet = (props) => {
-    const initialState = props.initialState;
-    const handleremove = () => {
-        console.log("remove this AddPlanetComponent")
-        props.removeMe();
-      };
-      const handleDistanceChange = (event, newValue) => {
-        props.setDistance(initialState.position, newValue);
-      };
-      const handleSizeChange = (event, newValue) => {
-        props.setSize(initialState.position, newValue);
-      };
-      const handlePhaseChange = (event, newValue) => {
-        props.setPhase(initialState.position, newValue);
-      };
-    
-    
-  var distanceMarks = [
-    {
-      value: 0.0,
-      label: "0",
-    },
-    {
-      value: 1,
-      label: "1 Au",
-    },
-    {
-      value: 10,
-      label: "10",
-    },
-  ];
-  var sizeMarks = [
-    {
-      value: 0.0,
-      label: "0",
-    },
-    {
-      value: 1,
-      label: "Earth",
-    },
-    {
-      value: 10,
-      label: "10",
-    },
-];
-var phaseMarks = [
-    {
+
+var distanceMarks = [
+  {
     value: 0.0,
     label: "0",
-    },
-    {
+  },
+  {
+    value: 1,
+    label: "1 Au",
+  },
+  {
+    value: 10,
+    label: "10",
+  },
+];
+var sizeMarks = [
+  {
+    value: 0.0,
+    label: "0",
+  },
+  {
+    value: 1,
+    label: "Earth",
+  },
+  {
+    value: 10,
+    label: "10",
+  },
+];
+var phaseMarks = [
+  {
+    value: 0.0,
+    label: "0",
+  },
+  {
     value: 90,
     label: "90",
-    },
-    {
+  },
+  {
     value: 180,
     label: "180",
-    },
-    {
+  },
+  {
     value: 270,
     label: "270",
-    },
-    {
+  },
+  {
     value: 360,
     label: "360",
-    },
-  ];
+  },
+];
+
+const AddPlanet = (props) => {
+
   return (
     <Box sx={{ width: 200 }}>
     <Typography variant="button" gutterBottom> Planet </Typography>
     <IconButton aria-label="delete"  color="primary" 
-            onClick={() => {handleremove();}}
+            onClick={() => props.removeMe()}
         ><DeleteIcon />
     </IconButton>
     <br></br>
     <Typography variant="caption" gutterBottom> Distance </Typography>
       <Slider
         aria-label="Always visible"
-        defaultValue={initialState.distance}
-        onChange={handleDistanceChange}
-        step={0.1}
+        value={props.planet.orbitAus}
+        onChange={(_, newValue) => props.setPlanet({...props.planet, orbitAus: newValue})}
+        step={0.01}
         min={0.1}
         max={2.0}
         valueLabelDisplay="auto"
@@ -94,8 +81,8 @@ var phaseMarks = [
       <Typography variant="caption" gutterBottom> Size </Typography>
       <Slider
         aria-label="Always visible"
-        defaultValue={initialState.size}
-        onChange={handleSizeChange}
+        value={props.planet.sizeEarths}
+        onChange={(_, newValue) => props.setPlanet({...props.planet, sizeEarths: newValue})}
         step={0.1}
         min={0.1}
         max={10}
@@ -105,8 +92,8 @@ var phaseMarks = [
       <Typography variant="caption" gutterBottom> Phase </Typography>
       <Slider
         aria-label="Always visible"
-        defaultValue={initialState.phase}
-        onChange={handlePhaseChange}
+        value={props.planet.phaseDeg}
+        onChange={(_, newValue) => props.setPlanet({...props.planet, phaseDeg: newValue})}
         step={5}
         min={0}
         max={360}

@@ -50,10 +50,6 @@ function createDebuggingViews(star, planet, orbitalPhasePlanet){
   const a2Leading = Math.atan(elevationPlanetLeadingEdge / (OBSERVER_POSITION.radiusAu - radiusProjectionPlanet))
   const a2Trailing = Math.atan(elevationPlanetTrailingEdge / (OBSERVER_POSITION.radiusAu - radiusProjectionPlanet))
 
-
-
-  const xOfs = planet.settings.orbitAus * pixelScale * Math.sin(orbitalPhasePlanet * DEG_RAD)
-  const yOfs = planet.settings.orbitAus * pixelScale * Math.cos(orbitalPhasePlanet * DEG_RAD)
   views.push(<Line closed={true} 
     points={[CENTER + (OBSERVER_POSITION.radiusAu * pixelScale), CENTER, CENTER+(radiusProjectionPlanet * pixelScale), CENTER+(elevationPlanetCenter * pixelScale), CENTER+(radiusProjectionPlanet * pixelScale), CENTER]} 
     stroke="lightblue"
@@ -90,7 +86,6 @@ const SystemCanvas = (props) => {
   const userModel = props.userModel;
   const simulationTimePct = props.simulationTimePct
 
-  const EARTH_RADIUS = 2
   const CANVAS_SIZE = Math.floor(0.9*(window.innerWidth / 2));
   const CENTER = CANVAS_SIZE/2;
   let pixelScale = (CANVAS_SIZE / 2) / MAX_RADIUS_AU;
@@ -131,7 +126,7 @@ const SystemCanvas = (props) => {
         <Group x={CENTER} y={CENTER} offsetX={CENTER} offsetY={CENTER} rotation={i*(360/numArrows)} key={"pulse-arrow-" + i}>
           <Arrow
             x={CENTER}
-            y={CENTER - (starRadius + 40)}
+            y={CENTER - ((starRadius * pixelScale) + 40)}
             points={points}
             pointerLength={pointerSize}
             pointerWidth={pointerSize}

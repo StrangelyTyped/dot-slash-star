@@ -1,6 +1,6 @@
 import React from "react"
 import { Typography, Paper } from '@mui/material';
-import LightChart from "../LightChart/LightChart";
+import LightChart from "./LightChart";
 import { simulate } from "../../data/CelestialMath";
 import { CHART_RESOLUTION_YEARS } from "../../data/Constants";
 

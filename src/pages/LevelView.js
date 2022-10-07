@@ -1,8 +1,8 @@
 import { Box, Drawer, Stack, Button } from '@mui/material';
-import SystemCanvas from '../components/SystemCanvas/SystemCanvas';
-import SystemConfig from '../components/SystemConfig/SystemConfig';
+import SystemCanvas from '../components/LevelView/SystemCanvas';
+import SystemConfig from '../components/LevelView/SystemConfig';
 import LevelData from "../data/levels";
-import SimulationResult from '../components/SimulationResult/SimulationResult';
+import SimulationResult from '../components/LevelView/SimulationResult';
 import InfoCard from '../components/InfoCard/InfoCard';
 import React from "react";
 import {useParams} from "react-router-dom";
@@ -15,7 +15,7 @@ const LevelView = (props) => {
     const levelId = level
     const [userModel, setUserModel] = React.useState(LevelData[levelId].levelConfig.initialState)
     const [simulationTimePct, setSimulationTimePct] = React.useState(0);
-    const [modalOpen, setModalOpen] = React.useState(true);
+    const [levelInfoOpen, setLevelInfoOpen] = React.useState(true);
 
     React.useEffect(() => {
         // For testing only, TODO: add slider
@@ -24,18 +24,9 @@ const LevelView = (props) => {
         }, 100)
     })
 
-    const handleOpen = () => {
-        console.log(modalOpen)
-        setModalOpen(true);
-    }
-
-    const handleClose = () => {
-        setModalOpen(false);
-    }
-
     return (
         <>
-        <InfoCard handleClose={handleClose} modalOpen={modalOpen} levelId={levelId} levelData={LevelData[levelId]} />
+        <InfoCard handleClose={() => setLevelInfoOpen(false)} modalOpen={levelInfoOpen} levelId={levelId} levelData={LevelData[levelId]} />
         <Box sx={{ display: 'flex' }}>
 
             <Drawer open={true}
@@ -55,7 +46,7 @@ const LevelView = (props) => {
                     alignItems="center"
                     spacing={2}>
                     <Box sx={{p: "10px"}}>
-                        <Button variant="contained" onClick={handleOpen} >Level Info</Button>
+                        <Button variant="contained" onClick={() => setLevelInfoOpen(true)} >Level Info</Button>
                     </Box>
                     <SimulationResult levelData={LevelData[levelId]} userModel={userModel} />
                     
@@ -86,7 +77,7 @@ const LevelView = (props) => {
                     alignItems="center"
                     spacing={2}
                    >
-                <SystemConfig simulationTimePct={simulationTimePct} userModel={userModel} levelId={levelId} levelData={LevelData[levelId]} setUserModel={setUserModel} />
+                    <SystemConfig simulationTimePct={simulationTimePct} userModel={userModel} levelId={levelId} levelData={LevelData[levelId]} setUserModel={setUserModel} />
                     
                 </Stack>
             </Drawer>
