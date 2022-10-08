@@ -1,14 +1,7 @@
 import { Stage, Layer, Arrow, Text, Circle, Arc, Rect, RegularPolygon, Group, Line } from 'react-konva';
 import konva from "konva";
 import { calculateOrbitalPhaseAtT, calculateTotalPulsationEffect } from '../../data/CelestialMath';
-import { MAX_RADIUS_AU, OBSERVER_POSITION } from "../../data/Constants"
-
-const DEG_RAD = Math.PI / 180;
-
-const BASE_SUN_RADIUS_AU = 0.00465046726;
-const BASE_PLANET_RADIUS_AU = 4.25875e-5;
-const SUN_RADIUS_MULTIPLIER_FACTOR = 30;
-const PLANET_RADIUS_MULTIPLIER_FACTOR = 300;
+import { MAX_RADIUS_AU, OBSERVER_POSITION, BASE_PLANET_RADIUS_AU, BASE_SUN_RADIUS_AU, DEG_RAD, PLANET_RADIUS_MULTIPLIER_FACTOR, SUN_RADIUS_MULTIPLIER_FACTOR } from "../../data/Constants"
 
 function createDebuggingViews(star, planet, orbitalPhasePlanet){
   const CANVAS_SIZE = Math.floor(0.9*(window.innerWidth / 2));

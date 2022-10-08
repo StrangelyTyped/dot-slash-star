@@ -1,9 +1,5 @@
-import { SIMULATION_LENGTH_YEARS, OBSERVER_POSITION } from "./Constants";
-const AU_M = 1.496e+11
-const SUN_KG = 1.989e30
-const EARTH_KG = 5.972e24
-const EARTH_YEAR_SECONDS = 31558150; // Math assumes that t=1 is 1 earth year
-const EARTH_DAY_SECONDS = 86400;
+import { DEG_RAD, SIMULATION_LENGTH_YEARS, OBSERVER_POSITION, AU_M, SUN_KG, EARTH_KG, EARTH_YEAR_SECONDS, EARTH_DAY_SECONDS, SUN_RADIUS_MULTIPLIER_FACTOR, PLANET_RADIUS_MULTIPLIER_FACTOR } from "./Constants";
+
 
 // Assume circular orbit - spherical chickens in a vacuum etc
 export function calculateOrbitalPhaseAtT(startPhaseDeg, orbitAus, sizeEarths, solarMassSuns, simulationTimePct){
@@ -41,47 +37,57 @@ export function calculateBrightnessAtT(simulationTimePct, dataModel){
         // Planetary Occlusion
         // OK lots of comments because math is hard
         // For the moment let's assume the observer is at phase = 90 (because math is hard and I haven't slept enough)
+
+        const starRadius = BASE_SUN_RADIUS_AU * star.settings.starMassSuns * SUN_RADIUS_MULTIPLIER_FACTOR;
+        // A1 is the angle between the observer-sun line and the edge of the sun (RADIANS)
+        const a1 = Math.abs(Math.atan(starRadius / OBSERVER_POSITION.radiusAu))
+
         if(planet.orbitAus > OBSERVER_POSITION.radiusAu){
             // Planet circles behind observer
             return;
         }
 
-        const starRadius = BASE_SUN_RADIUS_AU * star.settings.starMassSuns
-        const planetRadius = BASE_PLANET_RADIUS_AU * planet.settings.sizeEarths
+        const orbitalPhasePlanet = calculateOrbitalPhaseAtT(planet.settings.phaseDeg, planet.settings.orbitAus, planet.settings.sizeEarths, star.settings.starMassSuns, simulationTimePct)
 
         // Note: phase base = 90
-        const orbitalPhasePlanet = calculateOrbitalPhaseAtT(planet.settings.phaseDeg, planet.settings.orbitAus, planet.settings.sizeEarths, star.settings.starMassSuns, simulationTimePct)
         if(orbitalPhasePlanet > 180){
             // Planet is on far side of sun
             return;
         }
         // Orbital Offset Planet is the angle of the planet relative to the observer-sun line (from the side of the sun)
-        const orbitalPhaseOffsetPlanet = (orbitalPhasePlanet - 90) % 360;
+        const orbitalPhaseOffsetPlanet = (orbitalPhasePlanet + 90) % 360;
 
         // elevationPlanet - the distance (perpendicular to the observer-sun line) between the line and the planet
         // In theory this can be absolute but in practice we need to potentially stack multiple planets simultaneously
-        const elevationPlanet = planet.settings.orbitAus * Math.sin(orbitalPhaseOffsetPlanet)
+        const elevationPlanetCenter = planet.settings.orbitAus * Math.sin(orbitalPhaseOffsetPlanet * DEG_RAD)
+        const planetSizeRadius = (planet.settings.sizeEarths * BASE_PLANET_RADIUS_AU * PLANET_RADIUS_MULTIPLIER_FACTOR);
+        const elevationPlanetLeadingEdge = elevationPlanetCenter - planetSizeRadius
+        const elevationPlanetTrailingEdge = elevationPlanetCenter + planetSizeRadius
 
         // Radius projection planet - the distance along the observer-sun line (From the sun) to the elevation
-        const radiusProjectionPlanet = planet.settings.orbitAus * Math.cos(orbitalPhaseOffsetPlanet)
+        const radiusProjectionPlanet = Math.abs(planet.settings.orbitAus * Math.cos(orbitalPhaseOffsetPlanet * DEG_RAD))
 
-        // Lambda should be the angle between the observer-sun line and the planet (from the OBSERVER side)
-        const lambda = Math.abs(Math.atan(elevationPlanet / (OBSERVER_POSITION.radiusAu - radiusProjectionPlanet)))
-
-        // Distance between observer and centre of planet
-        const distanceObserverPlanet = elevationPlanet / Math.cos(lambda)
-
-        // A1 is the angle between the observer-sun line and the edge of the sun
-        const a1 = Math.abs(Math.atan(starRadius / OBSERVER_POSITION.radiusAu))
-
-        // A2 is the angle between the observer-sun line and the edge of the planet
-        const a2 = Math.abs(Math.atan(planetRadius / planet.settings.sizeEarths) + lambda)
+        // a2 should be the angle between the observer-sun line and the planet (from the OBSERVER side) (RADIANS)
+        const a2Leading = Math.atan(elevationPlanetLeadingEdge / (OBSERVER_POSITION.radiusAu - radiusProjectionPlanet))
+        const a2Trailing = Math.atan(elevationPlanetTrailingEdge / (OBSERVER_POSITION.radiusAu - radiusProjectionPlanet))
         
-        if(Math.abs(orbitalPhasePlanet - OBSERVER_POSITION.phaseDeg) < 5){
-            planetFactor -= 0.01 * (5 - Math.abs(orbitalPhasePlanet - OBSERVER_POSITION.phaseDeg))
+        let occlusionPct = 0
+        if(a2Leading < -a1 && a2Trailing > a1){
+            // Eclipse
+            occlusionPct = 1
+        } else if (Math.abs(a2Leading) < Math.abs(a1) && Math.abs(a2Trailing) < Math.abs(a1)){
+            // Planetary Transit
+            occlusionPct = (planetSizeRadius * planetSizeRadius) / (starRadius * starRadius)
+        } else if (Math.abs(a2Leading) < Math.abs(a1)){
+            // Leading Edge occlusion
+            //occlusionPct = ?
+        } else if (Math.abs(a2Trailing) < Math.abs(a1)){
+            // Trailing edge occlusion
+            //occlusionPct = ?
         }
 
-        // Remember to throw a square in here somewhere because inverse square law
+
+        planetFactor = Math.min(1, planetFactor * (1 - occlusionPct))
     })
     
     return pulsationFactor * planetFactor;
