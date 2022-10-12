@@ -1,4 +1,4 @@
-import React, { useState }  from "react";
+import React  from "react";
 import Box from "@mui/material/Box";
 import IconButton from "@mui/material/IconButton";
 import Slider from "@mui/material/Slider";
@@ -68,6 +68,7 @@ const AddPulsation = (props) => {
         step={5}
         min={1}
         max={730}
+        valueLabelDisplay="auto"
         marks={periodMarks}
       />
       <Typography variant="caption" gutterBottom> Magnitude </Typography>
@@ -78,6 +79,7 @@ const AddPulsation = (props) => {
         step={0.1}
         min={0}
         max={1}
+        valueLabelDisplay="auto"
         marks={magnitudeMarks}
       />
     </Box>

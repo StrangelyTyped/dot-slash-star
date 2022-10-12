@@ -1,9 +1,8 @@
 import React from "react"
 import AddIcon from '@mui/icons-material/Add'
-import { Typography, Toolbar, IconButton, Menu, MenuItem, Divider, Box } from '@mui/material';
+import { Typography, Toolbar, IconButton, Menu, MenuItem, Divider, Box, Paper } from '@mui/material';
 import AddPlanet from "../ControlComponents/AddPlanet";
 import AddPulsation from "../ControlComponents/AddPulsation";
-import { SettingsInputAntennaTwoTone } from "@mui/icons-material";
 
 
 const SystemConfig = (props) => {
@@ -16,60 +15,64 @@ const SystemConfig = (props) => {
       setAnchorEl(null);
     };
     var drawControlBoxes = ((userModel) =>  {
-        var modifiabbleModel = structuredClone(userModel);
+        var modifiableModel = structuredClone(userModel);
         // skip the first item as it is always the star
-        var elementtList = [];
-         for (var i=1; i<userModel.length; i++){
-            var settings = modifiabbleModel[i].settings;
+        var elementList = [];
+         for (var i=0; i<userModel.length; i++){
+            var settings = modifiableModel[i].settings;
             if (userModel[i].feature === "pulsation"){
-                elementtList.push(
+                elementList.push(
                     <AddPulsation 
+                        key={"feature-" + i}
                         removeMe={(position) => {
                             console.log("remove");
                             // modifiabbleModel.splice(position, 1);
                             // props.setUserModel(modifiabbleModel);
                         }}
                         setPeriod={(position, period) => {
-                            modifiabbleModel[position].settings.periodDays = period;
+                            modifiableModel[position].settings.periodDays = period;
                             // setState({usermodel[i].settings.periodDays: period});
-                            props.setUserModel(modifiabbleModel);
+                            props.setUserModel(modifiableModel);
                         }}
                         setMagnitude={(position, mag) => {
-                            modifiabbleModel[position].settings.magnitudePct = mag;
-                            props.setUserModel(modifiabbleModel);
+                            modifiableModel[position].settings.magnitudePct = mag;
+                            props.setUserModel(modifiableModel);
                         }}
                         initialState={{position: i, magnitude: settings.magnitudePct, period: settings.periodDays}}
                     />
                 )
             } else if (userModel[i].feature === "planet"){
-                elementtList.push(
+                elementList.push(
                     <AddPlanet 
+                        key={"feature-" + i}
                         removeMe={(position) => {
                             console.log("remove");
                             // modifiabbleModel.splice(position, 1);
                             // props.setUserModel(modifiabbleModel);
                         }}
                         setDistance={(position, distance) => {
-                            modifiabbleModel[position].settings.orbitAus = distance;
-                            props.setUserModel(modifiabbleModel);
+                            modifiableModel[position].settings.orbitAus = distance;
+                            props.setUserModel(modifiableModel);
                             
                         }}
                         setSize={(position, size) => {
-                            modifiabbleModel[position].settings.sizeEarths = size;
-                            props.setUserModel(modifiabbleModel);
+                            modifiableModel[position].settings.sizeEarths = size;
+                            props.setUserModel(modifiableModel);
                         }}
                         setPhase={(position, phase) => {
-                            modifiabbleModel[position].settings.phaseDeg = phase;
-                            props.setUserModel(modifiabbleModel);
+                            modifiableModel[position].settings.phaseDeg = phase;
+                            props.setUserModel(modifiableModel);
                         }}
                         initialState={{position: i, distance: settings.orbitAus, size: settings.sizeEarths, phase: settings.phaseDeg}}
                     />
                 )
+            } else if (userModel[i].feature === "star"){
+                //No-op
             } else {
                 console.log("how draw: " + userModel[i].feature);
             }
         }
-        return elementtList;
+        return elementList;
     })
     return (
         <>
@@ -101,9 +104,14 @@ const SystemConfig = (props) => {
                     <MenuItem onClick={handleClose}>Pulsation</MenuItem>
                 </Menu>
             </Toolbar>
-
-            <Box style={{flexGrow: 1}}>t = {Math.round(props.simulationTimePct*10000)/10000}</Box>
-            {drawControlBoxes(props.userModel)}
+            <Paper sx={{padding: "0px 20px"}}>
+                <p>
+                    t = {props.simulationTimePct.toFixed(3)} Earth Years
+                </p>
+            </Paper>
+            <Box>
+                {drawControlBoxes(props.userModel)}
+            </Box>
         </>
     );
 

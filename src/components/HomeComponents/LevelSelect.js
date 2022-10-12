@@ -47,11 +47,13 @@ const LevelSelect = (props) => {
         stars.push(
             <LevelStar
               level={`${index + 1}`}
+              key={index}
               x={starX}
               y={starY}
               width={starWidth}
               height={starHeight}
-              onHover={() => props.onHover(index)}
+              onHover={() => props.onHover(index + 1)}
+              onUnhover={() => props.onUnhover()}
             />
         );
 
@@ -71,6 +73,7 @@ const LevelSelect = (props) => {
       lines.push(
         <Line
           points={[starFrom.x, starFrom.y, starTo.x, starTo.y]}
+          key={index}
           stroke={"grey"}
           strokeWidth={5}
         />
@@ -84,4 +87,4 @@ const LevelSelect = (props) => {
     )
 }
 
-export default LevelSelect;
+export default React.memo(LevelSelect);

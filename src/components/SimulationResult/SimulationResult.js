@@ -10,8 +10,8 @@ const SimulationResult = (props) => {
 
     return (
         <>
-            <Paper>
-                <Typography variant="h4">Score: 20%</Typography>
+            <Paper sx={{p: "20px"}}>
+                <Typography variant="h4" gutterBottom={false}>Score: 20%</Typography>
             </Paper>
             <LightChart title="Simulation Result" data={simulationDataUser} />
             <LightChart title="Your Objective" data={simulationDataLevel} />
