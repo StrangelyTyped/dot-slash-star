@@ -3,7 +3,54 @@ import konva from "konva";
 import { calculateOrbitalPhaseAtT, calculateTotalPulsationEffect } from '../../data/CelestialMath';
 import { MAX_RADIUS_AU, OBSERVER_POSITION, BASE_PLANET_RADIUS_AU, BASE_SUN_RADIUS_AU, DEG_RAD, PLANET_RADIUS_MULTIPLIER_FACTOR, SUN_RADIUS_MULTIPLIER_FACTOR } from "../../data/Constants"
 
-function createDebuggingViews(star, planet, orbitalPhasePlanet){
+function hypot(a, b){
+  return Math.sqrt(a * a + b * b)
+}
+function circleIntersections(planetY, sunRadius, planetRadius){
+  const sunX = 0
+  const sunY = 0
+  const planetX = 0
+  
+  const d = hypot(sunX - planetX, sunY - planetY)
+  const ex = (sunX - planetX) / d
+  const ey = (sunY - planetY) / d
+
+  const x = (planetRadius * planetRadius - sunRadius * sunRadius + d * d) / (2 * d)
+  const y = Math.sqrt(planetRadius * planetRadius - x * x)
+
+  const P1 = {
+    x: planetX + x * ex - y * ey,
+    y: planetY + x * ey + y * ex
+  }
+
+  const P2 = {
+    x: planetX + x * ex + y * ey,
+    y: planetY + x * ey - y * ex
+  }
+  return [P1, P2]
+}
+
+function circleOverlapArea(planetY, sunRadius, planetRadius){
+  const sunX = 0
+  const sunY = 0
+  const planetX = 0
+
+  const d = hypot(sunX - planetX, sunY - planetY)
+
+  const a = planetRadius * planetRadius
+  const b = sunRadius * sunRadius
+
+  const x = (a - b + d * d) / (2 * d)
+  const z = x * x
+  const y = Math.sqrt(a - z)
+
+  if (d <= Math.abs(sunRadius - planetRadius)) {
+      return Math.PI * Math.min(a, b)
+  }
+  return a * Math.asin(y / planetRadius) + b * Math.asin(y / sunRadius) - y * (x + Math.sqrt(z + b - a))
+}
+
+function createDebuggingViews(star, planet, orbitalPhasePlanet, idx){
   const CANVAS_SIZE = Math.floor(0.9*(window.innerWidth / 2));
   const CENTER = CANVAS_SIZE/2;
   let pixelScale = (CANVAS_SIZE / 2) / MAX_RADIUS_AU;
@@ -16,7 +63,7 @@ function createDebuggingViews(star, planet, orbitalPhasePlanet){
   // A1 is the angle between the observer-sun line and the edge of the sun (RADIANS)
   const a1 = Math.abs(Math.atan(starRadius / OBSERVER_POSITION.radiusAu))
 
-  if(planet.orbitAus > OBSERVER_POSITION.radiusAu){
+  if(planet.settings.orbitAus > OBSERVER_POSITION.radiusAu){
     // Planet circles behind observer
     return views;
   }
@@ -42,35 +89,63 @@ function createDebuggingViews(star, planet, orbitalPhasePlanet){
   // a2 should be the angle between the observer-sun line and the planet (from the OBSERVER side) (RADIANS)
   const a2Leading = Math.atan(elevationPlanetLeadingEdge / (OBSERVER_POSITION.radiusAu - radiusProjectionPlanet))
   const a2Trailing = Math.atan(elevationPlanetTrailingEdge / (OBSERVER_POSITION.radiusAu - radiusProjectionPlanet))
+  const a2 = Math.atan(elevationPlanetCenter / (OBSERVER_POSITION.radiusAu - radiusProjectionPlanet))
 
+  /*
   views.push(<Line closed={true} 
     points={[CENTER + (OBSERVER_POSITION.radiusAu * pixelScale), CENTER, CENTER+(radiusProjectionPlanet * pixelScale), CENTER+(elevationPlanetCenter * pixelScale), CENTER+(radiusProjectionPlanet * pixelScale), CENTER]} 
     stroke="lightblue"
     fill="lightblue"
     fillEnabled={Math.abs(a2Leading) < Math.abs(a1) || Math.abs(a2Trailing) < Math.abs(a1) || (a2Leading < -a1 && a2Trailing > a1)} />)
+    */
+
+    views.push(<Line closed={false}
+      points={[CENTER-1, CENTER - starRadius * pixelScale, CENTER-1, CENTER + starRadius * pixelScale]}
+      stroke="limegreen" />)
+
+      const yOfs1 = Math.tan(a2Leading) * OBSERVER_POSITION.radiusAu
+      const yOfs2 = Math.tan(a2Trailing) * OBSERVER_POSITION.radiusAu
+      const yOfs3 = Math.tan(a2) * OBSERVER_POSITION.radiusAu
+      const planetProjectedRadiusAtStar = Math.abs(yOfs2 - yOfs1) / 2
+    views.push(<Line closed={false} 
+      points={[
+        CENTER, CENTER+(yOfs1 * pixelScale), 
+        CENTER + (OBSERVER_POSITION.radiusAu * pixelScale), CENTER, 
+        CENTER, CENTER+(yOfs2 * pixelScale)
+      ]} 
+      stroke="hotpink" />)
+    views.push(<Line closed={false}
+      points={[
+        CENTER, CENTER+(yOfs1 * pixelScale), 
+        CENTER, CENTER+(yOfs2 * pixelScale)
+      ]}
+      stroke="turquoise" />)
   
     let occlusionPct = 0
     if(a2Leading < -a1 && a2Trailing > a1){
-      views.push(<Text x={CENTER+100} y={CENTER+100} text="Eclipse" stroke="red" fontSize={16} />)
       occlusionPct = 1
+      console.log(1, occlusionPct, idx)
     } else if (Math.abs(a2Leading) < Math.abs(a1) && Math.abs(a2Trailing) < Math.abs(a1)){
-      views.push(<Text x={CENTER+100} y={CENTER+100} text="Full Planet Partial Occlusion" stroke="red" fontSize={16} />)
-      occlusionPct = (planetSizeRadius * planetSizeRadius) / (starRadius * starRadius)
+      occlusionPct = ((Math.PI * starRadius * starRadius) - (Math.PI * planetSizeRadius * planetSizeRadius)) / (Math.PI * starRadius * starRadius)
+      console.log(2, occlusionPct, idx)
     } else if (Math.abs(a2Leading) < Math.abs(a1)){
-      views.push(<Text x={CENTER+100} y={CENTER+100} text="Leading Edge Occlusion" stroke="red" fontSize={16} />)
-      //occlusionPct = ?
+      occlusionPct = circleOverlapArea(yOfs3, starRadius, planetProjectedRadiusAtStar) / (Math.PI * starRadius * starRadius)
+      console.log(3, occlusionPct, idx)
     } else if (Math.abs(a2Trailing) < Math.abs(a1)){
-      views.push(<Text x={CENTER+100} y={CENTER+100} text="Trailing Edge Occlusion" stroke="red" fontSize={16} />)
-      //occlusionPct = ?
+      occlusionPct = occlusionPct = circleOverlapArea(yOfs3, starRadius, planetProjectedRadiusAtStar) / (Math.PI * starRadius * starRadius)
+      console.log(4, occlusionPct, idx)
     }
-    views.push(<Text x={CENTER+100} y={CENTER+120} text={"Masking " + Math.round(occlusionPct*100) + "%"} stroke="white" fontSize={16} />)
-
-  views.push(<Line closed={false} 
-    points={[CENTER+(radiusProjectionPlanet * pixelScale), CENTER+(elevationPlanetLeadingEdge * pixelScale), CENTER + (OBSERVER_POSITION.radiusAu * pixelScale), CENTER, CENTER+(radiusProjectionPlanet * pixelScale), CENTER+(elevationPlanetTrailingEdge * pixelScale)]} 
-    stroke="orange" />)
+    console.log("Masking " + Math.round(occlusionPct*100) + "%", idx)
+    views.push(<Line closed={false} 
+      points={[CENTER+(radiusProjectionPlanet * pixelScale), CENTER+(elevationPlanetLeadingEdge * pixelScale), CENTER + (OBSERVER_POSITION.radiusAu * pixelScale), CENTER, CENTER+(radiusProjectionPlanet * pixelScale), CENTER+(elevationPlanetTrailingEdge * pixelScale)]} 
+      stroke="orange" />)
+    /*
+  
   views.push(<Line closed={false}
     points={[CENTER + (OBSERVER_POSITION.radiusAu * pixelScale), CENTER, CENTER+(radiusProjectionPlanet * pixelScale), CENTER+(elevationPlanetCenter * pixelScale)]}
-    stroke="yellow" />)
+    stroke="yellow" />) 
+    */
+
 
   return views
 }
@@ -141,7 +216,7 @@ const SystemCanvas = (props) => {
     const xOfs = planetOrbitRadius * Math.sin(planetPhase * DEG_RAD)
     const yOfs = planetOrbitRadius * Math.cos(planetPhase * DEG_RAD)
 
-    const debuggingViews = createDebuggingViews(star, planet, planetPhase)
+    const debuggingViews = createDebuggingViews(star, planet, planetPhase, idx)
     const planetSizeRadius = pixelScale * planet.settings.sizeEarths * BASE_PLANET_RADIUS_AU * PLANET_RADIUS_MULTIPLIER_FACTOR
 
     layers.push(

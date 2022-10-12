@@ -24,6 +24,53 @@ export function calculateTotalPulsationEffect(pulsations, simulationTimePct){
     return cumulativeEffect;
 }
 
+function hypot(a, b){
+    return Math.sqrt(a * a + b * b)
+  }
+  function circleIntersections(planetY, sunRadius, planetRadius){
+    const sunX = 0
+    const sunY = 0
+    const planetX = 0
+    
+    const d = hypot(sunX - planetX, sunY - planetY)
+    const ex = (sunX - planetX) / d
+    const ey = (sunY - planetY) / d
+  
+    const x = (planetRadius * planetRadius - sunRadius * sunRadius + d * d) / (2 * d)
+    const y = Math.sqrt(planetRadius * planetRadius - x * x)
+  
+    const P1 = {
+      x: planetX + x * ex - y * ey,
+      y: planetY + x * ey + y * ex
+    }
+  
+    const P2 = {
+      x: planetX + x * ex + y * ey,
+      y: planetY + x * ey - y * ex
+    }
+    return [P1, P2]
+  }
+  
+  function circleOverlapArea(planetY, sunRadius, planetRadius){
+    const sunX = 0
+    const sunY = 0
+    const planetX = 0
+  
+    const d = hypot(sunX - planetX, sunY - planetY)
+  
+    const a = planetRadius * planetRadius
+    const b = sunRadius * sunRadius
+  
+    const x = (a - b + d * d) / (2 * d)
+    const z = x * x
+    const y = Math.sqrt(a - z)
+  
+    if (d <= Math.abs(sunRadius - planetRadius)) {
+        return Math.PI * Math.min(a, b)
+    }
+    return a * Math.asin(y / planetRadius) + b * Math.asin(y / sunRadius) - y * (x + Math.sqrt(z + b - a))
+  }
+
 const BASE_SUN_RADIUS_AU = 0.00465046726;
 const BASE_PLANET_RADIUS_AU = 4.25875e-5;
 export function calculateBrightnessAtT(simulationTimePct, dataModel){
@@ -67,25 +114,26 @@ export function calculateBrightnessAtT(simulationTimePct, dataModel){
         // Radius projection planet - the distance along the observer-sun line (From the sun) to the elevation
         const radiusProjectionPlanet = Math.abs(planet.settings.orbitAus * Math.cos(orbitalPhaseOffsetPlanet * DEG_RAD))
 
-        // a2 should be the angle between the observer-sun line and the planet (from the OBSERVER side) (RADIANS)
+         // a2 should be the angle between the observer-sun line and the planet (from the OBSERVER side) (RADIANS)
         const a2Leading = Math.atan(elevationPlanetLeadingEdge / (OBSERVER_POSITION.radiusAu - radiusProjectionPlanet))
         const a2Trailing = Math.atan(elevationPlanetTrailingEdge / (OBSERVER_POSITION.radiusAu - radiusProjectionPlanet))
-        
+        const a2 = Math.atan(elevationPlanetCenter / (OBSERVER_POSITION.radiusAu - radiusProjectionPlanet))
+
+        const yOfs1 = Math.tan(a2Leading) * OBSERVER_POSITION.radiusAu
+        const yOfs2 = Math.tan(a2Trailing) * OBSERVER_POSITION.radiusAu
+        const yOfs3 = Math.tan(a2) * OBSERVER_POSITION.radiusAu
+        const planetProjectedRadiusAtStar = Math.abs(yOfs2 - yOfs1) / 2
+
         let occlusionPct = 0
         if(a2Leading < -a1 && a2Trailing > a1){
-            // Eclipse
             occlusionPct = 1
         } else if (Math.abs(a2Leading) < Math.abs(a1) && Math.abs(a2Trailing) < Math.abs(a1)){
-            // Planetary Transit
-            occlusionPct = (planetSizeRadius * planetSizeRadius) / (starRadius * starRadius)
+            occlusionPct = ((Math.PI * starRadius * starRadius) - (Math.PI * planetSizeRadius * planetSizeRadius)) / (Math.PI * starRadius * starRadius)
         } else if (Math.abs(a2Leading) < Math.abs(a1)){
-            // Leading Edge occlusion
-            //occlusionPct = ?
+            occlusionPct = circleOverlapArea(yOfs3, starRadius, planetProjectedRadiusAtStar) / (Math.PI * starRadius * starRadius)
         } else if (Math.abs(a2Trailing) < Math.abs(a1)){
-            // Trailing edge occlusion
-            //occlusionPct = ?
+            occlusionPct = occlusionPct = circleOverlapArea(yOfs3, starRadius, planetProjectedRadiusAtStar) / (Math.PI * starRadius * starRadius)
         }
-
 
         planetFactor = Math.min(1, planetFactor * (1 - occlusionPct))
     })
